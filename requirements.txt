@@ -1,0 +1,12 @@
+requests
+beautifulsoup4
+chromadb
+groq
+nomic
+sentence-transformers
+lxml
+networkx
+psycopg2-binary
+pgvector
+sqlalchemy
+python-dotenv

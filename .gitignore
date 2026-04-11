@@ -1,0 +1,9 @@
+.venv/
+.env
+__pycache__/
+data/
+dashboard/.vercel
+dashboard/node_modules
+dashboard/.next
+dashboard/out
+dashboard/AGENTS.md
