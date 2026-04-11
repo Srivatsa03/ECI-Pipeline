@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Android Security Bulletin - Latest",
+    "url": "https://source.android.com/docs/security/bulletin",
+    "category": "security_bulletin",
+    "fetch_type": "html",
+    "priority": 1,
+    "active": true
+  },
+  {
+    "name": "Play Integrity API Overview",
+    "url": "https://developer.android.com/google/play/integrity/overview",
+    "category": "developer_docs",
+    "fetch_type": "html",
+    "priority": 1,
+    "active": true
+  },
+  {
+    "name": "CISA Known Exploited Vulnerabilities",
+    "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+    "category": "cve_feed",
+    "fetch_type": "html",
+    "priority": 1,
+    "active": true
+  },
+  {
+    "name": "CISA KEV JSON Feed",
+    "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+    "category": "cve_feed",
+    "fetch_type": "json",
+    "priority": 1,
+    "active": true
+  },
+  {
+    "name": "Google Play Developer Policy Center",
+    "url": "https://support.google.com/googleplay/android-developer/answer/9904549",
+    "category": "policy_update",
+    "fetch_type": "html",
+    "priority": 2,
+    "active": true
+  },
+  {
+    "name": "Android API Differences Report",
+    "url": "https://developer.android.com/sdk/api_diff/35/changes",
+    "category": "developer_docs",
+    "fetch_type": "html",
+    "priority": 2,
+    "active": true
+  },
+  {
+    "name": "NVD CVE Feed (Android)",
+    "url": "https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=android&resultsPerPage=20",
+    "category": "cve_feed",
+    "fetch_type": "json",
+    "priority": 1,
+    "active": true
+  },
+  {
+    "name": "Android CTS/CDD Changes",
+    "url": "https://source.android.com/docs/compatibility/cdd",
+    "category": "developer_docs",
+    "fetch_type": "html",
+    "priority": 2,
+    "active": true
+  },
+  {
+    "name": "Samsung Mobile Security Bulletin",
+    "url": "https://security.samsungmobile.com/securityUpdate.smsb",
+    "category": "oem_bulletin",
+    "fetch_type": "html",
+    "priority": 2,
+    "active": true
+  },
+  {
+    "name": "Pixel Update Bulletin",
+    "url": "https://source.android.com/docs/security/bulletin/pixel",
+    "category": "oem_bulletin",
+    "fetch_type": "html",
+    "priority": 2,
+    "active": true
+  }
+]
