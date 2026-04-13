@@ -21,10 +21,7 @@ DATA_DIR.mkdir(exist_ok=True)
 # ── Supabase / PostgreSQL ─────────────────────────────────────────
 USE_SUPABASE = os.environ.get("USE_SUPABASE", "true").lower() == "true"
 
-SUPABASE_URL = os.environ.get(
-    "DATABASE_URL",
-    "postgresql://postgres.wyflritmsjfpfiixzbmc:your_db_password@aws-0-us-west-2.pooler.supabase.com:6543/postgres"
-)
+SUPABASE_URL = os.environ.get("DATABASE_URL", "")
 
 # SQLAlchemy engine URL — swap based on toggle
 if USE_SUPABASE:
