@@ -1,0 +1,67 @@
+name: ECI Pipeline — Scheduled Run
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # Every 6 hours
+  workflow_dispatch:          # Manual trigger from GitHub UI
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/**'
+      - 'agents/**'
+      - 'rag/**'
+      - 'config/**'
+      - 'main.py'
+
+jobs:
+  run-pipeline:
+    name: Run ECI Pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: pip-
+
+      - name: Cache HuggingFace model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-nomic-embed-text-v1.5
+          restore-keys: hf-nomic-embed-
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install einops
+
+      - name: Run ECI Pipeline — all stages
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          USE_SUPABASE: 'true'
+          PYTHONIOENCODING: utf-8
+        run: python3 main.py --stage all
+
+      - name: Upload pipeline report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-report-${{ github.run_number }}
+          path: |
+            data/knowledge_graph.json
+          retention-days: 7
+          if-no-files-found: ignore
