@@ -2,7 +2,7 @@ name: ECI Pipeline — Scheduled Run
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # Every 6 hours
+    - cron: '0 0 */3 * *'   # Every 3 days
   workflow_dispatch:          # Manual trigger from GitHub UI
   push:
     branches: [main]

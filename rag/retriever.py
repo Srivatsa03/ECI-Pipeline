@@ -2,7 +2,7 @@
 from rag.embedder import query_similar
 from rag.entity_extractor import extract_entities
 from rag.knowledge_graph import KnowledgeGraph
-from utils.db import get_session, Change, Source
+from utils.db import get_session, Change, Source, Recommendation
 
 
 def retrieve_context(query: str, top_k: int = 5, source_filter: int = None,
@@ -328,3 +328,35 @@ def retrieve_by_variant(
     raise ValueError(
         f"Unknown variant '{variant}'. Choose from: {', '.join(RETRIEVAL_VARIANTS)}"
     )
+
+
+def retrieve_recent_tickets(top_k: int = 10) -> str:
+    """Retrieve the most recent/critical action tickets from the DB."""
+    session = get_session()
+    try:
+        recs = session.query(Recommendation).order_by(Recommendation.risk_score.desc()).limit(top_k).all()
+        if not recs:
+            return "No recent action tickets found."
+        blocks = []
+        for r in recs:
+            blocks.append(f"Ticket: [{r.priority.upper()}] {r.title} (Risk: {r.risk_score})\nSummary: {r.summary}")
+        return "\n\n".join(blocks)
+    finally:
+        session.close()
+
+
+def retrieve_pipeline_stats() -> str:
+    """Retrieve operational pipeline stats from DB."""
+    session = get_session()
+    try:
+        active_sources = session.query(Source).filter_by(active=True).count()
+        total_changes = session.query(Change).count()
+        pending_changes = session.query(Change).filter_by(status="pending").count()
+        escalated_changes = session.query(Change).filter_by(status="escalated").count()
+        return (
+            f"Active Sources Monitored: {active_sources}\n"
+            f"Total Changes Detected: {total_changes}\n"
+            f"Pending Changes: {pending_changes} | Escalated Changes: {escalated_changes}"
+        )
+    finally:
+        session.close()
