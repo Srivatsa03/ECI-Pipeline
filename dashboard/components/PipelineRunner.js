@@ -8,6 +8,27 @@ export default function PipelineRunner() {
   const intervalRef = useRef(null);
   const userScrolledRef = useRef(false);
   const logBoxRef = useRef(null);
+  const [triggering, setTriggering] = useState(false);
+  const [triggerMsg, setTriggerMsg] = useState('');
+
+  const triggerPipeline = async () => {
+    setTriggering(true);
+    setTriggerMsg('');
+    try {
+      const res = await fetch('/api/pipeline', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        setTriggerMsg('Pipeline triggered! Logs will appear in ~10 seconds.');
+        // Start polling immediately
+        intervalRef.current = setInterval(fetchStatus, 3000);
+      } else {
+        setTriggerMsg(`Error: ${data.error}`);
+      }
+    } catch (e) {
+      setTriggerMsg(`Error: ${e.message}`);
+    }
+    setTriggering(false);
+  };
 
   const fetchStatus = async () => {
     try {
@@ -47,22 +68,27 @@ export default function PipelineRunner() {
   return (
     <div style={{ marginBottom: 32 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 16 }}>
-        <a
-          href="https://github.com/Srivatsa03/ECI-Pipeline/actions"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={triggerPipeline}
+          disabled={triggering || isActive}
           style={{
             padding: '12px 24px',
-            background: 'var(--accent-blue)',
-            color: '#fff',
+            background: (triggering || isActive) ? 'rgba(56,189,248,0.1)' : 'var(--accent-blue)',
+            color: (triggering || isActive) ? 'var(--accent-blue)' : '#fff',
             fontWeight: 700,
             borderRadius: 8,
-            textDecoration: 'none',
-            boxShadow: '0 4px 12px rgba(56,189,248,0.2)',
+            border: (triggering || isActive) ? '1px solid rgba(56,189,248,0.3)' : 'none',
+            cursor: (triggering || isActive) ? 'not-allowed' : 'pointer',
+            boxShadow: (triggering || isActive) ? 'none' : '0 4px 12px rgba(56,189,248,0.2)',
           }}
         >
-          ▶ Trigger Run on GitHub
-        </a>
+          {triggering ? 'Triggering...' : isActive ? 'Pipeline Running...' : '▶ Trigger Pipeline Run'}
+        </button>
+        {triggerMsg && (
+          <span style={{ fontSize: 13, color: triggerMsg.startsWith('Error') ? '#ef4444' : '#10b981' }}>
+            {triggerMsg}
+          </span>
+        )}
         {job && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: statusColor }}>
             <div style={{ width: 8, height: 8, background: statusColor, borderRadius: '50%',
