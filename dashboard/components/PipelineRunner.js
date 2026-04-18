@@ -1,52 +1,138 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function PipelineRunner() {
   const [job, setJob] = useState(null);
+  const [logs, setLogs] = useState([]);
+  const logsEndRef = useRef(null);
+  const intervalRef = useRef(null);
+  const userScrolledRef = useRef(false);
+  const logBoxRef = useRef(null);
+
+  const fetchStatus = async () => {
+    try {
+      const res = await fetch('/api/pipeline', { cache: 'no-store' });
+      const data = await res.json();
+      if (data.job) {
+        setJob(data.job);
+        if (data.logs?.length) setLogs(data.logs);
+        if (data.job.status === 'completed' || data.job.status === 'failed') {
+          clearInterval(intervalRef.current);
+        }
+      }
+    } catch {}
+  };
 
   useEffect(() => {
-    fetch('/api/pipeline', { cache: 'no-store' })
-      .then(r => r.json())
-      .then(data => { if (data.job) setJob(data.job); })
-      .catch(() => {});
+    fetchStatus();
+    intervalRef.current = setInterval(fetchStatus, 3000);
+    return () => clearInterval(intervalRef.current);
   }, []);
 
-  const isActive = job?.status === 'pending' || job?.status === 'running';
+  useEffect(() => {
+    if (!userScrolledRef.current && logsEndRef.current) {
+      logsEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [logs]);
+
+  const handleScroll = () => {
+    if (!logBoxRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = logBoxRef.current;
+    userScrolledRef.current = scrollHeight - scrollTop - clientHeight > 40;
+  };
+
+  const isActive = job?.status === 'running' || job?.status === 'pending';
   const statusColor = isActive ? '#38bdf8' : job?.status === 'completed' ? '#10b981' : job?.status === 'failed' ? '#ef4444' : '#64748b';
 
   return (
-    <div style={{ marginBottom: 32, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-      <a
-        href="https://github.com/Srivatsa03/ECI-Pipeline/actions"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="glass-card"
-        style={{
-          padding: '12px 24px',
-          background: 'var(--accent-blue)',
-          color: '#fff',
-          fontWeight: 700,
-          border: 'none',
-          cursor: 'pointer',
-          borderRadius: 8,
-          textDecoration: 'none',
-          display: 'inline-block',
-          boxShadow: '0 4px 12px rgba(56, 189, 248, 0.2)',
-        }}
-      >
-        ▶ View Pipeline Runs on GitHub
-      </a>
+    <div style={{ marginBottom: 32 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 16 }}>
+        <a
+          href="https://github.com/Srivatsa03/ECI-Pipeline/actions"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            padding: '12px 24px',
+            background: 'var(--accent-blue)',
+            color: '#fff',
+            fontWeight: 700,
+            borderRadius: 8,
+            textDecoration: 'none',
+            boxShadow: '0 4px 12px rgba(56,189,248,0.2)',
+          }}
+        >
+          ▶ Trigger Run on GitHub
+        </a>
+        {job && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: statusColor }}>
+            <div style={{ width: 8, height: 8, background: statusColor, borderRadius: '50%',
+              animation: isActive ? 'pulse 1.5s infinite' : 'none' }} />
+            Job #{job.id}: <strong>{job.status}</strong>
+            {job.finished_at && (
+              <span style={{ color: 'var(--text-muted)', marginLeft: 4 }}>
+                · finished {new Date(job.finished_at).toLocaleTimeString()}
+              </span>
+            )}
+          </div>
+        )}
+        <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+          Auto-runs every 3 days · logs stream here when active
+        </span>
+      </div>
 
       {job && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: statusColor }}>
-          <div style={{ width: 8, height: 8, background: statusColor, borderRadius: '50%' }} />
-          Last job #{job.id}: <strong>{job.status}</strong>
+        <div
+          ref={logBoxRef}
+          onScroll={handleScroll}
+          style={{
+            background: '#0f172a',
+            border: '1px solid #1e293b',
+            borderRadius: 8,
+            padding: 16,
+            height: 360,
+            overflowY: 'auto',
+            fontFamily: 'monospace',
+            fontSize: 12,
+            color: '#cbd5e1',
+            boxShadow: 'inset 0 4px 20px rgba(0,0,0,0.5)',
+          }}
+        >
+          <div style={{ color: '#475569', marginBottom: 8 }}>
+            ── ECI Pipeline Job #{job.id} · {job.status} ──
+          </div>
+          {logs.length === 0 && isActive && (
+            <div style={{ color: '#475569' }}>Waiting for logs...</div>
+          )}
+          {logs.length === 0 && !isActive && (
+            <div style={{ color: '#475569' }}>No logs yet. Trigger a run to see output here.</div>
+          )}
+          {logs.map((line, i) => {
+            const isErr = /error|traceback|failed/i.test(line);
+            const isWarn = /warn/i.test(line);
+            const isStage = /=== stage/i.test(line);
+            const isSuccess = /✓|success|completed/i.test(line);
+            return (
+              <div key={i} style={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-all',
+                lineHeight: 1.6,
+                marginTop: isStage ? 8 : 0,
+                color: isErr ? '#ef4444' : isWarn ? '#f59e0b' : isStage ? '#c084fc' : isSuccess ? '#10b981' : '#cbd5e1',
+                fontWeight: isStage ? 700 : 400,
+              }}>
+                {line}
+              </div>
+            );
+          })}
+          {isActive && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8, color: '#475569' }}>
+              <div style={{ width: 6, height: 6, background: '#38bdf8', borderRadius: '50%', animation: 'pulse 1.5s infinite' }} />
+              streaming...
+            </div>
+          )}
+          <div ref={logsEndRef} />
         </div>
       )}
-
-      <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-        Pipeline runs automatically every 3 days via GitHub Actions
-      </span>
     </div>
   );
 }

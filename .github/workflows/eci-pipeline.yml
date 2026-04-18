@@ -54,7 +54,29 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           USE_SUPABASE: 'true'
           PYTHONIOENCODING: utf-8
-        run: python3 main.py --stage all
+        run: |
+          JOB_ID=$(python3 -c "
+          import psycopg2, os
+          conn = psycopg2.connect(os.environ['DATABASE_URL'])
+          conn.autocommit = True
+          cur = conn.cursor()
+          cur.execute(\"INSERT INTO pipeline_jobs (status, started_at) VALUES ('running', NOW()) RETURNING id\")
+          print(cur.fetchone()[0])
+          conn.close()
+          ")
+          echo "Pipeline job ID: $JOB_ID"
+          python3 main.py --stage all 2>&1 | python3 scripts/pipeline_logger.py $JOB_ID
+          EXIT_CODE=${PIPESTATUS[0]}
+          python3 -c "
+          import psycopg2, os
+          conn = psycopg2.connect(os.environ['DATABASE_URL'])
+          conn.autocommit = True
+          cur = conn.cursor()
+          status = 'completed' if $EXIT_CODE == 0 else 'failed'
+          cur.execute(\"UPDATE pipeline_jobs SET status=%s, finished_at=NOW() WHERE id=%s\", (status, $JOB_ID))
+          conn.close()
+          "
+          exit $EXIT_CODE
 
       - name: Upload pipeline report as artifact
         if: always()
