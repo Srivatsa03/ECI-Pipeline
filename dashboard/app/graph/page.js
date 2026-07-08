@@ -6,13 +6,13 @@ import dynamic from 'next/dynamic';
 const ForceGraph2D = dynamic(() => import('react-force-graph-2d'), { ssr: false });
 
 const legendItems = [
-  { type: 'CVE', color: '#ef4444', icon: '🕷️' },
-  { type: 'Component', color: '#3b82f6', icon: '⚙️' },
-  { type: 'Change Event', color: '#10b981', icon: '📡' },
-  { type: 'Policy Clause', color: '#f59e0b', icon: '📜' },
-  { type: 'API Level', color: '#8b5cf6', icon: '🔢' },
-  { type: 'Permission', color: '#ec4899', icon: '🔐' },
-  { type: 'Kernel', color: '#06b6d4', icon: '🐧' },
+  { type: 'CVE', color: '#ff5c5c', icon: '🕷️' },
+  { type: 'Component', color: '#5e9bff', icon: '⚙️' },
+  { type: 'Change Event', color: '#34d399', icon: '📡' },
+  { type: 'Policy Clause', color: '#f5b544', icon: '📜' },
+  { type: 'API Level', color: '#a78bfa', icon: '🔢' },
+  { type: 'Permission', color: '#f472b6', icon: '🔐' },
+  { type: 'Kernel', color: '#22d3ee', icon: '🐧' },
 ];
 
 const getTypeIcon = (type) => {
@@ -31,7 +31,22 @@ export default function GraphPage() {
   const [hoveredNode, setHoveredNode] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [theme, setTheme] = useState('dark');
+  const [dim, setDim] = useState({ width: 0, height: 0 });
   const graphRef = useRef();
+  const containerRef = useRef(null);
+
+  // Measure the graph container so the canvas fills it exactly.
+  // (react-force-graph defaults to full-window size otherwise — which makes
+  // the graph render off-centre and clipped behind the sidebar.)
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const el = containerRef.current;
+    const measure = () => setDim({ width: el.clientWidth, height: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [selectedNode]);
 
   useEffect(() => {
     fetch('/api/graph').then(r => r.json()).then(d => {
@@ -47,7 +62,7 @@ export default function GraphPage() {
       d.nodes.forEach(n => {
         n.degree = degrees[n.id] || 0;
         // Base size 6. Hub nodes grow logarithmically up to 24px
-        n.val = Math.min(24, Math.max(6, 6 + (Math.log(n.degree + 1) * 3))); 
+        n.val = Math.min(24, Math.max(6, 6 + (Math.log(n.degree + 1) * 3)));
       });
 
       setGraphData(d);
@@ -86,10 +101,10 @@ export default function GraphPage() {
     const isLight = theme === 'light';
     return {
       text: isLight ? '#0f172a' : 'rgba(255, 255, 255, 0.9)',
-      link: isLight ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.15)',
-      linkHighlight: isLight ? '#2563eb' : '#60a5fa',
-      cardHover: isLight ? '#ffffff' : '#1a1a24',
-      bgNode: isLight ? '#ffffff' : '#12121a'
+      link: isLight ? 'rgba(0, 0, 0, 0.14)' : 'rgba(255, 255, 255, 0.14)',
+      linkHighlight: '#f5b544',
+      cardHover: isLight ? '#ffffff' : '#1a1c22',
+      bgNode: isLight ? '#ffffff' : '#14161c',
     };
   }, [theme]);
 
@@ -107,17 +122,17 @@ export default function GraphPage() {
     ctx.arc(node.x, node.y, size, 0, 2 * Math.PI);
     ctx.fillStyle = colors.bgNode;
     ctx.fill();
-    
+
     // Colored rim
     ctx.lineWidth = isHighlighted ? 2.5 : 1.5;
     ctx.strokeStyle = node.color;
     ctx.stroke();
-    
+
     ctx.shadowBlur = 0;
 
     // Draw Emoji Icon
     const icon = getTypeIcon(node.type);
-    const fontSize = size * 1.2; 
+    const fontSize = size * 1.2;
     ctx.font = `${fontSize}px sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -126,7 +141,7 @@ export default function GraphPage() {
     // Label Text
     if (globalScale > 1.2 || isHighlighted || node.degree > 8) {
       const labelFontSize = Math.max(10 / globalScale, 2.5);
-      ctx.font = `${(isHighlighted || node.degree > 5) ? 'bold ' : ''}${labelFontSize}px Inter, sans-serif`;
+      ctx.font = `${(isHighlighted || node.degree > 5) ? 'bold ' : ''}${labelFontSize}px "IBM Plex Mono", monospace`;
       ctx.fillStyle = colors.text;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
@@ -165,7 +180,7 @@ export default function GraphPage() {
       }
 
       const fontSize = Math.max(6 / globalScale, 1.5);
-      ctx.font = `${isHighlighted ? '700 ' : '500 '}${fontSize}px Inter, monospace`;
+      ctx.font = `${isHighlighted ? '700 ' : '500 '}${fontSize}px "IBM Plex Mono", monospace`;
       ctx.fillStyle = isHighlighted ? colors.linkHighlight : colors.text;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'bottom';
@@ -233,7 +248,7 @@ export default function GraphPage() {
     if (items.length === 0) return null;
     return (
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <div className="eyebrow" style={{ marginBottom: 10 }}>
           {title} ({items.length})
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -247,15 +262,15 @@ export default function GraphPage() {
               <div key={i} style={{
                 padding: '12px 14px', background: getThemeColors().cardHover, border: `1px solid var(--border)`,
                 borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12,
-                transition: 'all 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                transition: 'all 0.2s',
               }} onClick={() => handleNodeClick(typeof counterpart === 'object' ? counterpart : graphData.nodes.find(n => n.id === counterpartId))}>
-                
+
                 <div style={{ fontSize: 20, flexShrink: 0, width: 28, textAlign: 'center' }}>
                   {icon}
                 </div>
-                
+
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: 13, wordBreak: 'break-all', marginBottom: 2 }}>{counterpartId}</div>
+                  <div className="mono" style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: 13, wordBreak: 'break-all', marginBottom: 2 }}>{counterpartId}</div>
                   <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'capitalize' }}>{counterpartType.replace('_', ' ')}</div>
                 </div>
               </div>
@@ -273,52 +288,53 @@ export default function GraphPage() {
       <Sidebar />
       <div className="main-content" style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
         <div style={{ flexShrink: 0, marginBottom: 16 }}>
-          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>Intelligence Map</h1>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>Cross-Source Entity Correlation</div>
+          <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>Knowledge Graph</h1>
           <p style={{ fontSize: 14, color: 'var(--text-muted)' }}>
-            Threat mapping & cross-source entity correlations — {graphData.nodes.length} hubs, {graphData.links.length} connections
+            <span className="mono">{graphData.nodes.length}</span> entities ·{' '}
+            <span className="mono">{graphData.links.length}</span> relations — CVEs, components, changes &amp; policy, linked
           </p>
         </div>
 
-        <div className="glass-card" style={{ padding: '12px 20px', marginBottom: 16, flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div className="graph-legend" style={{ display: 'flex', gap: 16 }}>
+        <div className="glass-card" style={{ padding: '12px 20px', marginBottom: 16, flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+          <div className="graph-legend" style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
             {legendItems.map(l => (
               <div key={l.type} className="legend-item" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ fontSize: 14 }}>{l.icon}</span>
+                <span className="legend-dot" style={{ background: l.color }} />
                 <span style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500 }}>{l.type}</span>
               </div>
             ))}
           </div>
-          <button 
-            onClick={() => graphRef.current?.zoomToFit(400, 50)} 
-            style={{
-              background: 'transparent', border: '1px solid var(--border)', padding: '6px 12px', 
-              borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 600, color: 'var(--text-primary)'
-            }}>
-            ⛶ Zoom to Fit
+          <button className="btn-ghost" style={{ padding: '6px 14px', fontSize: 12 }}
+            onClick={() => graphRef.current?.zoomToFit(500, 60)}>
+            ⛶ Zoom to fit
           </button>
         </div>
 
         <div style={{ display: 'flex', gap: 16, flex: 1, minHeight: 0 }}>
-          
-          <div className="glass-card" style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-            {graphData.nodes.length > 0 ? (
+
+          <div ref={containerRef} className="glass-card reticle" style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+            {graphData.nodes.length > 0 && dim.width > 0 ? (
               <ForceGraph2D
                 ref={graphRef}
+                width={dim.width}
+                height={dim.height}
                 graphData={graphData}
                 nodeVal="val"
                 nodeRelSize={1}
                 nodeCanvasObject={paintNode}
                 linkCanvasObject={paintLink}
-                backgroundColor="transparent"
+                backgroundColor="rgba(0,0,0,0)"
                 onNodeHover={handleNodeHover}
                 onNodeClick={handleNodeClick}
-                cooldownTicks={100}
+                cooldownTicks={120}
                 d3AlphaDecay={0.02}
                 d3VelocityDecay={0.3}
+                onEngineStop={() => graphRef.current?.zoomToFit(500, 60)}
               />
             ) : (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)' }}>
-                Loading visualization...
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                <span className="eyebrow">Rendering graph…</span>
               </div>
             )}
           </div>
@@ -329,30 +345,30 @@ export default function GraphPage() {
               display: 'flex',
               flexDirection: 'column',
               flexShrink: 0,
-              animation: 'fadeIn 0.2s ease-out'
+              animation: 'fade-in 0.2s ease-out',
             }}>
               <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3 style={{ fontSize: 13, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)' }}>Threat Intelligence Summary</h3>
+                <h3 className="eyebrow">Threat Intelligence Summary</h3>
                 <button onClick={() => setSelectedNode(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 22, padding: '0 4px', lineHeight: 1 }}>&times;</button>
               </div>
-              
+
               <div style={{ padding: '24px 20px', overflowY: 'auto', flex: 1 }}>
-                
+
                 {/* Node Header */}
                 <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 20 }}>
-                  <div style={{ fontSize: 42, background: 'rgba(255,255,255,0.05)', borderRadius: 16, padding: '8px 12px', flexShrink: 0, boxShadow: `0 0 10px ${selectedNode.color}40`, border: `1px solid ${selectedNode.color}80` }}>
+                  <div style={{ fontSize: 40, background: 'rgba(255,255,255,0.05)', borderRadius: 14, padding: '8px 12px', flexShrink: 0, boxShadow: `0 0 16px ${selectedNode.color}40`, border: `1px solid ${selectedNode.color}80` }}>
                     {getTypeIcon(selectedNode.type)}
                   </div>
                   <div>
-                    <div style={{ fontSize: 11, fontWeight: 600, color: selectedNode.color, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{selectedNode.type.replace('_', ' ')}</div>
-                    <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-primary)', wordBreak: 'break-all', lineHeight: 1.2 }}>{selectedNode.label || selectedNode.id}</div>
+                    <div className="eyebrow" style={{ color: selectedNode.color, marginBottom: 4 }}>{selectedNode.type.replace('_', ' ')}</div>
+                    <div className="mono" style={{ fontSize: 19, fontWeight: 700, color: 'var(--text-primary)', wordBreak: 'break-all', lineHeight: 1.2 }}>{selectedNode.label || selectedNode.id}</div>
                   </div>
                 </div>
 
-                {/* AI Blast Radius Summary */}
-                <div style={{ padding: '16px', background: 'rgba(59, 130, 246, 0.05)', border: '1px solid rgba(59, 130, 246, 0.2)', borderRadius: 12, marginBottom: 28 }}>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--accent-blue)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
-                    Executive Summary
+                {/* Blast Radius Summary */}
+                <div style={{ padding: '16px', background: 'rgba(245, 181, 68, 0.06)', border: '1px solid rgba(245, 181, 68, 0.22)', borderRadius: 12, marginBottom: 28 }}>
+                  <div className="eyebrow" style={{ color: 'var(--accent-amber)', marginBottom: 8 }}>
+                    Blast Radius
                   </div>
                   <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6 }}>
                     {edgeData.summary}
