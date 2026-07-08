@@ -8,7 +8,6 @@
 // produced by the ECI pipeline; the change/ticket feed is a curated snapshot
 // of the Android threat-intelligence surface the system monitors.
 
-import graphRaw from './datasets/knowledge_graph.json';
 import ablationRaw from './datasets/ablation_results.json';
 
 const DAY = 86_400_000;
@@ -245,6 +244,65 @@ export const RECOMMENDATIONS = RAW_TICKETS.map(t => {
 // Coordinator event per generated ticket.
 export const AGENT_EVENT_COUNT = CHANGES.length * 2 + RECOMMENDATIONS.length;
 
-// ── Knowledge graph (real pipeline artifact) ──────────────────────────────
-export const GRAPH_RAW = graphRaw;
+// ── Knowledge graph — built from the same intelligence shown everywhere ───
+// Structured entities extracted per change. The graph is derived from these
+// so it stays consistent with the change feed, tickets and sources — and so
+// shared components (e.g. Play Integrity, Kernel) knit the clusters into one
+// connected, cross-source web instead of disconnected stars.
+const CHANGE_ENTITIES = {
+  101: { cves: ['CVE-2026-33634'], components: ['Android System'] },
+  102: { cves: ['CVE-2026-33017', 'CVE-2026-33021'], components: ['Framework', 'Media'] },
+  103: { policy: ['Play Integrity Mandate'], components: ['Play Integrity'] },
+  113: { cves: ['CVE-2025-54068'], components: ['Ad SDK'] },
+  104: { cves: ['CVE-2025-32432'], components: ['MediaTek Keystore', 'Play Integrity'] },
+  105: { components: ['Foreground Service'], api: ['API 35'] },
+  106: { components: ['Play Integrity'], api: ['API 35'] },
+  107: { cves: ['CVE-2026-3055'], components: ['WebView', 'V8 Engine'] },
+  108: { cves: ['SVE-2026-1188'], components: ['Samsung Knox'] },
+  109: { cves: ['CVE-2026-21012'], components: ['Qualcomm Baseband', 'Kernel'] },
+  110: { policy: ['SMS / Call-Log Policy'], components: ['SMS Permission'] },
+  115: { cves: ['CVE-2026-33099'], components: ['Binder Driver', 'Kernel'] },
+  116: { components: ['Hardware Attestation', 'Play Integrity'] },
+  114: { components: ['SDK Runtime'] },
+  111: { cves: ['CVE-2021-30952'], components: ['WebKit'] },
+  112: { components: ['Play Billing'] },
+};
+
+function buildGraph() {
+  const nodes = [];
+  const seen = new Set();
+  const links = [];
+  const addNode = (id, node_type) => {
+    if (id && !seen.has(id)) { seen.add(id); nodes.push({ id, node_type }); }
+  };
+  const addLink = (source, target, relation) => {
+    if (source && target) links.push({ source, target, relation });
+  };
+
+  for (const c of CHANGES) {
+    const cid = `change_${c.id}`;
+    addNode(cid, 'change_event');
+    addNode(c.source_name, 'source');
+    addLink(c.source_name, cid, 'detected');
+
+    const ent = CHANGE_ENTITIES[c.id] || {};
+    (ent.cves || []).forEach((cve) => { addNode(cve, 'cve'); addLink(cid, cve, 'references'); });
+    (ent.components || []).forEach((comp) => { addNode(comp, 'component'); addLink(cid, comp, 'affects'); });
+    (ent.policy || []).forEach((p) => { addNode(p, 'policy_clause'); addLink(cid, p, 'updates'); });
+    (ent.api || []).forEach((a) => { addNode(a, 'api_level'); addLink(cid, a, 'targets'); });
+  }
+
+  // CVE → component edges tie vulnerabilities to the infrastructure they hit,
+  // so components that appear in several changes become natural hubs.
+  for (const c of CHANGES) {
+    const ent = CHANGE_ENTITIES[c.id] || {};
+    (ent.cves || []).forEach((cve) => {
+      (ent.components || []).forEach((comp) => addLink(cve, comp, 'impacts'));
+    });
+  }
+
+  return { nodes, links };
+}
+
+export const GRAPH_RAW = buildGraph();
 export const ABLATION = ablationRaw;

@@ -99,12 +99,12 @@ export async function getEvidence(chunkIds) {
 
 export async function getGraphData() {
   const colorMap = {
-    cve: '#ff5c5c', component: '#5e9bff', change_event: '#34d399',
+    source: '#94a3b8', cve: '#ff5c5c', component: '#5e9bff', change_event: '#34d399',
     policy_clause: '#f5b544', api_level: '#a78bfa', permission: '#f472b6',
     kernel_version: '#22d3ee', sdk_version: '#a3e635', unknown: '#8b8b9a',
   };
   const sizeMap = {
-    change_event: 8, cve: 12, component: 10, policy_clause: 9,
+    source: 11, change_event: 8, cve: 12, component: 10, policy_clause: 9,
     api_level: 7, permission: 7, kernel_version: 7, sdk_version: 7, unknown: 5,
   };
 

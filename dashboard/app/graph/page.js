@@ -6,16 +6,16 @@ import dynamic from 'next/dynamic';
 const ForceGraph2D = dynamic(() => import('react-force-graph-2d'), { ssr: false });
 
 const legendItems = [
+  { type: 'Source', color: '#94a3b8', icon: '🛰️' },
+  { type: 'Change', color: '#34d399', icon: '📡' },
   { type: 'CVE', color: '#ff5c5c', icon: '🕷️' },
   { type: 'Component', color: '#5e9bff', icon: '⚙️' },
-  { type: 'Change Event', color: '#34d399', icon: '📡' },
-  { type: 'Policy Clause', color: '#f5b544', icon: '📜' },
+  { type: 'Policy', color: '#f5b544', icon: '📜' },
   { type: 'API Level', color: '#a78bfa', icon: '🔢' },
-  { type: 'Permission', color: '#f472b6', icon: '🔐' },
-  { type: 'Kernel', color: '#22d3ee', icon: '🐧' },
 ];
 
 const getTypeIcon = (type) => {
+  if (type === 'source') return '🛰️';
   if (type === 'cve') return '🕷️';
   if (type === 'component') return '⚙️';
   if (type === 'change_event') return '📡';
@@ -84,6 +84,17 @@ export default function GraphPage() {
     }
   }, []);
 
+  // Spread the layout so clusters separate and labels stop overlapping.
+  useEffect(() => {
+    const fg = graphRef.current;
+    if (!fg || graphData.nodes.length === 0) return;
+    try {
+      fg.d3Force('charge')?.strength(-170).distanceMax(420);
+      fg.d3Force('link')?.distance(60).strength(0.5);
+      fg.d3ReheatSimulation?.();
+    } catch { /* force API not ready yet */ }
+  }, [graphData]);
+
   const handleNodeHover = useCallback(node => {
     document.body.style.cursor = node ? 'pointer' : 'default';
     setHoveredNode(node);
@@ -138,8 +149,8 @@ export default function GraphPage() {
     ctx.textBaseline = 'middle';
     ctx.fillText(icon, node.x, node.y + (size * 0.05));
 
-    // Label Text
-    if (globalScale > 1.2 || isHighlighted || node.degree > 8) {
+    // Label Text — only when zoomed in or focused, to avoid pile-up
+    if (isHighlighted || globalScale > 1.6) {
       const labelFontSize = Math.max(10 / globalScale, 2.5);
       ctx.font = `${(isHighlighted || node.degree > 5) ? 'bold ' : ''}${labelFontSize}px "IBM Plex Mono", monospace`;
       ctx.fillStyle = colors.text;
