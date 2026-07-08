@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: '◈' },
-  { href: '/tickets', label: 'Action Tickets', icon: '◉' },
-  { href: '/graph', label: 'Knowledge Graph', icon: '◎' },
-  { href: '/sources', label: 'Sources', icon: '◇' },
-  { href: '/changes', label: 'Changes', icon: '△' },
-  { href: '/chat', label: 'Threat Assistant', icon: '💬' },
+  { href: '/', label: 'Overview', icon: '▚', group: 'Operations' },
+  { href: '/tickets', label: 'Action Tickets', icon: '◈', group: 'Operations' },
+  { href: '/changes', label: 'Change Feed', icon: '≋', group: 'Operations' },
+  { href: '/graph', label: 'Knowledge Graph', icon: '◍', group: 'Intelligence' },
+  { href: '/analytics', label: 'Benchmarks', icon: '▟', group: 'Intelligence' },
+  { href: '/sources', label: 'Sources', icon: '◇', group: 'Intelligence' },
+  { href: '/chat', label: 'Threat Assistant', icon: '⌘', group: 'Intelligence' },
 ];
 
 export default function Sidebar() {
@@ -25,76 +26,81 @@ export default function Sidebar() {
   }, []);
 
   const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-    localStorage.setItem('theme', nextTheme);
-    document.documentElement.setAttribute('data-theme', nextTheme);
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('theme', next);
+    document.documentElement.setAttribute('data-theme', next);
   };
+
+  const groups = [...new Set(navItems.map(i => i.group))];
 
   return (
     <div className="sidebar">
-      <div style={{ padding: '28px 24px 20px', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      {/* Brand */}
+      <div style={{ padding: '24px 22px 18px', borderBottom: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
           <div style={{
-            width: 36, height: 36, borderRadius: 10,
-            background: 'var(--gradient-1)',
+            position: 'relative', width: 38, height: 38, borderRadius: 11,
+            background: 'var(--gradient-1)', overflow: 'hidden',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 18, fontWeight: 800,
-          }}>E</div>
+            fontSize: 19, fontWeight: 800, color: '#1a1205',
+            boxShadow: '0 4px 16px rgba(245,181,68,0.3)',
+          }}>
+            S
+            <div style={{
+              position: 'absolute', left: 0, right: 0, height: 8,
+              background: 'rgba(255,255,255,0.35)', filter: 'blur(3px)',
+              animation: 'scan 3.2s linear infinite',
+            }} />
+          </div>
           <div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>ECI Pipeline</div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.05em' }}>CHANGE INTELLIGENCE</div>
+            <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: '0.06em', color: 'var(--text-primary)' }}>
+              SENTINEL
+            </div>
+            <div className="eyebrow" style={{ fontSize: 9.5, marginTop: 1 }}>
+              ECI · CHANGE INTEL
+            </div>
           </div>
         </div>
       </div>
 
-      <nav style={{ padding: '16px 0', flex: 1 }}>
-        <div style={{ padding: '0 20px', marginBottom: 8 }}>
-          <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-            Navigation
-          </span>
-        </div>
-        {navItems.map(item => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`sidebar-link ${pathname === item.href ? 'active' : ''}`}
-          >
-            <span style={{ fontSize: 16 }}>{item.icon}</span>
-            {item.label}
-          </Link>
+      {/* Nav */}
+      <nav style={{ padding: '14px 0', flex: 1, overflowY: 'auto' }}>
+        {groups.map(group => (
+          <div key={group} style={{ marginBottom: 10 }}>
+            <div className="eyebrow" style={{ padding: '6px 22px', fontSize: 9.5 }}>{group}</div>
+            {navItems.filter(i => i.group === group).map(item => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`sidebar-link ${pathname === item.href ? 'active' : ''}`}
+              >
+                <span className="sidebar-ico">{item.icon}</span>
+                {item.label}
+              </Link>
+            ))}
+          </div>
         ))}
       </nav>
 
-      <div style={{
-        padding: '16px 20px',
-        borderTop: '1px solid var(--border)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        fontSize: 11,
-        color: 'var(--text-muted)',
-      }}>
-        <span>DeltaRAG + Graph-RAG</span>
-        {mounted && (
-          <button 
-            onClick={toggleTheme}
-            style={{ 
-              background: 'transparent',
-              border: '1px solid var(--border)',
-              borderRadius: '6px',
-              padding: '4px 8px',
-              cursor: 'pointer',
-              color: 'var(--text-secondary)',
-              fontSize: '14px',
-              display: 'flex',
-              alignItems: 'center'
-            }}
-            title="Toggle Theme"
-          >
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
-        )}
+      {/* Footer */}
+      <div style={{ padding: '14px 22px', borderTop: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <span className="status-pill" style={{ padding: '5px 10px' }}>
+            <span className="live-dot" /> ONLINE
+          </span>
+          {mounted && (
+            <button
+              onClick={toggleTheme}
+              className="btn-ghost"
+              style={{ padding: '5px 9px', fontSize: 14 }}
+              title="Toggle theme"
+            >
+              {theme === 'dark' ? '☀' : '☾'}
+            </button>
+          )}
+        </div>
+        <div className="eyebrow" style={{ fontSize: 9.5 }}>DeltaRAG + Graph-RAG</div>
       </div>
     </div>
   );

@@ -1,0 +1,1689 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "node_type": "change_event",
+      "source_id": 4,
+      "source_category": "cve_feed",
+      "id": "change_4"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-33634"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-33017"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-32432"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-54068"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-43510"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-43520"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-31277"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 7,
+      "source_category": "cve_feed",
+      "id": "change_6"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2008-0985"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 3,
+      "source_category": "cve_feed",
+      "id": "change_11"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-3055"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2021-30952"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 4,
+      "source_category": "cve_feed",
+      "id": "change_17"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2012-1854"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-60710"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2023-21529"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2023-36424"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2020-9715"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-21643"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-34621"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 2,
+      "source_category": "developer_docs",
+      "id": "change_2"
+    },
+    {
+      "node_type": "api_level",
+      "id": "android_13"
+    },
+    {
+      "node_type": "policy_clause",
+      "id": "play_integrity_api"
+    },
+    {
+      "node_type": "policy_clause",
+      "id": "meets_strong_integrity"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 3,
+      "source_category": "cve_feed",
+      "id": "change_3"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 8,
+      "source_category": "developer_docs",
+      "id": "change_7"
+    },
+    {
+      "node_type": "component",
+      "id": "wi-fi"
+    },
+    {
+      "node_type": "component",
+      "id": "bluetooth"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 3,
+      "source_category": "cve_feed",
+      "id": "change_10"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-53521"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2023-43000"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 3,
+      "source_category": "cve_feed",
+      "id": "change_16"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-20131"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-20963"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-66376"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-47813"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 1,
+      "source_category": "security_bulletin",
+      "id": "change_18"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-0096"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-0097"
+    },
+    {
+      "node_type": "api_level",
+      "id": "android_14"
+    },
+    {
+      "node_type": "kernel_version",
+      "id": "kernel_6.6"
+    },
+    {
+      "node_type": "component",
+      "id": "wi-fi_subsystem"
+    },
+    {
+      "node_type": "component",
+      "id": "wi-fi_hal"
+    },
+    {
+      "node_type": "component",
+      "id": "gpu_driver"
+    },
+    {
+      "node_type": "component",
+      "id": "mali"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 3,
+      "source_category": "cve_feed",
+      "id": "change_13"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-1340"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-1281"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-35616"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-3502"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-5281"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2026-1603"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-26399"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2021-22054"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2023-41974"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 4,
+      "source_category": "cve_feed",
+      "id": "change_14"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 2,
+      "source_category": "developer_docs",
+      "id": "change_19"
+    },
+    {
+      "node_type": "policy_clause",
+      "id": "meets_virtual_integrity"
+    },
+    {
+      "node_type": "policy_clause",
+      "id": "meets_basic_integrity"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 3,
+      "source_category": "cve_feed",
+      "id": "change_20"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 4,
+      "source_category": "cve_feed",
+      "id": "change_21"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 5,
+      "source_category": "policy_update",
+      "id": "change_22"
+    },
+    {
+      "node_type": "permission",
+      "id": "READ_MEDIA_IMAGES"
+    },
+    {
+      "node_type": "policy_clause",
+      "id": "permissions_policy"
+    },
+    {
+      "node_type": "policy_clause",
+      "id": "photo_picker"
+    },
+    {
+      "node_type": "policy_clause",
+      "id": "ai-generated_content"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 6,
+      "source_category": "developer_docs",
+      "id": "change_23"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 7,
+      "source_category": "cve_feed",
+      "id": "change_24"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-0098"
+    },
+    {
+      "node_type": "component",
+      "id": "camera_hal"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 8,
+      "source_category": "developer_docs",
+      "id": "change_25"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 9,
+      "source_category": "oem_bulletin",
+      "id": "change_26"
+    },
+    {
+      "node_type": "cve",
+      "id": "CVE-2025-0093"
+    },
+    {
+      "node_type": "cve",
+      "id": "SVE-2025-0303"
+    },
+    {
+      "node_type": "component",
+      "id": "secure_folder"
+    },
+    {
+      "node_type": "change_event",
+      "source_id": 10,
+      "source_category": "oem_bulletin",
+      "id": "change_27"
+    },
+    {
+      "node_type": "component",
+      "id": "modem"
+    },
+    {
+      "node_type": "component",
+      "id": "baseband"
+    }
+  ],
+  "edges": [
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_4",
+      "target": "CVE-2026-33634"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_4",
+      "target": "CVE-2026-33017"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_4",
+      "target": "CVE-2025-32432"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_4",
+      "target": "CVE-2025-54068"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_4",
+      "target": "CVE-2025-43510"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_4",
+      "target": "CVE-2025-43520"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_4",
+      "target": "CVE-2025-31277"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33634",
+      "target": "CVE-2026-33017"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33634",
+      "target": "CVE-2025-32432"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33634",
+      "target": "CVE-2025-54068"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33634",
+      "target": "CVE-2025-43510"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33634",
+      "target": "CVE-2025-43520"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33634",
+      "target": "CVE-2025-31277"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33017",
+      "target": "CVE-2025-32432"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33017",
+      "target": "CVE-2025-54068"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33017",
+      "target": "CVE-2025-43510"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33017",
+      "target": "CVE-2025-43520"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-33017",
+      "target": "CVE-2025-31277"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-32432",
+      "target": "CVE-2025-54068"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-32432",
+      "target": "CVE-2025-43510"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-32432",
+      "target": "CVE-2025-43520"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-32432",
+      "target": "CVE-2025-31277"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-54068",
+      "target": "CVE-2025-43510"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-54068",
+      "target": "CVE-2025-43520"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-54068",
+      "target": "CVE-2025-31277"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-43510",
+      "target": "CVE-2025-43520"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-43510",
+      "target": "CVE-2025-31277"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-43520",
+      "target": "CVE-2025-31277"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_6",
+      "target": "CVE-2008-0985"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_11",
+      "target": "CVE-2026-3055"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_11",
+      "target": "CVE-2021-30952"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-3055",
+      "target": "CVE-2021-30952"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_17",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_17",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_17",
+      "target": "CVE-2023-21529"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_17",
+      "target": "CVE-2023-36424"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_17",
+      "target": "CVE-2020-9715"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_17",
+      "target": "CVE-2026-21643"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_17",
+      "target": "CVE-2026-34621"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2012-1854",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2012-1854",
+      "target": "CVE-2023-21529"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2012-1854",
+      "target": "CVE-2023-36424"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2012-1854",
+      "target": "CVE-2020-9715"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2012-1854",
+      "target": "CVE-2026-21643"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2012-1854",
+      "target": "CVE-2026-34621"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-60710",
+      "target": "CVE-2023-21529"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-60710",
+      "target": "CVE-2023-36424"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-60710",
+      "target": "CVE-2020-9715"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-60710",
+      "target": "CVE-2026-21643"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-60710",
+      "target": "CVE-2026-34621"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-60710",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-21529",
+      "target": "CVE-2023-36424"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-21529",
+      "target": "CVE-2020-9715"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-21529",
+      "target": "CVE-2026-21643"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-21529",
+      "target": "CVE-2026-34621"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-21529",
+      "target": "CVE-2026-20131"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-21529",
+      "target": "CVE-2026-20963"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-21529",
+      "target": "CVE-2025-66376"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-21529",
+      "target": "CVE-2025-47813"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-21529",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-21529",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-36424",
+      "target": "CVE-2020-9715"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-36424",
+      "target": "CVE-2026-21643"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-36424",
+      "target": "CVE-2026-34621"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-36424",
+      "target": "CVE-2023-21529"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-36424",
+      "target": "CVE-2026-20131"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-36424",
+      "target": "CVE-2026-20963"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-36424",
+      "target": "CVE-2025-66376"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-36424",
+      "target": "CVE-2025-47813"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-36424",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2023-36424",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2020-9715",
+      "target": "CVE-2026-21643"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2020-9715",
+      "target": "CVE-2026-34621"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2020-9715",
+      "target": "CVE-2023-36424"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2020-9715",
+      "target": "CVE-2023-21529"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2020-9715",
+      "target": "CVE-2026-20131"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2020-9715",
+      "target": "CVE-2026-20963"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2020-9715",
+      "target": "CVE-2025-66376"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2020-9715",
+      "target": "CVE-2025-47813"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2020-9715",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2020-9715",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-21643",
+      "target": "CVE-2026-34621"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-21643",
+      "target": "CVE-2020-9715"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-21643",
+      "target": "CVE-2023-36424"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-21643",
+      "target": "CVE-2023-21529"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-21643",
+      "target": "CVE-2026-20131"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-21643",
+      "target": "CVE-2026-20963"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-21643",
+      "target": "CVE-2025-66376"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-21643",
+      "target": "CVE-2025-47813"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-21643",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-21643",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-34621",
+      "target": "CVE-2026-21643"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-34621",
+      "target": "CVE-2020-9715"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-34621",
+      "target": "CVE-2023-36424"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-34621",
+      "target": "CVE-2023-21529"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-34621",
+      "target": "CVE-2026-20131"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-34621",
+      "target": "CVE-2026-20963"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-34621",
+      "target": "CVE-2025-66376"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-34621",
+      "target": "CVE-2025-47813"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-34621",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-34621",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_2",
+      "target": "android_13"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_2",
+      "target": "play_integrity_api"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_2",
+      "target": "meets_strong_integrity"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_3",
+      "target": "CVE-2026-33634"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_3",
+      "target": "CVE-2026-33017"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_3",
+      "target": "CVE-2025-31277"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_7",
+      "target": "wi-fi"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_7",
+      "target": "bluetooth"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_10",
+      "target": "CVE-2025-53521"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_10",
+      "target": "CVE-2023-43000"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-53521",
+      "target": "CVE-2023-43000"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2026-34621"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2026-21643"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2020-9715"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2023-36424"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2023-21529"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2026-20131"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2026-20963"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2025-66376"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2025-47813"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_16",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-20131",
+      "target": "CVE-2026-20963"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-20131",
+      "target": "CVE-2025-66376"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-20131",
+      "target": "CVE-2025-47813"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-20131",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-20131",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-20963",
+      "target": "CVE-2025-66376"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-20963",
+      "target": "CVE-2025-47813"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-20963",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-20963",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-66376",
+      "target": "CVE-2025-47813"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-66376",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-66376",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-47813",
+      "target": "CVE-2025-60710"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-47813",
+      "target": "CVE-2012-1854"
+    },
+    {
+      "relation": "references",
+      "source_category": "security_bulletin",
+      "source": "change_18",
+      "target": "CVE-2025-0096"
+    },
+    {
+      "relation": "references",
+      "source_category": "security_bulletin",
+      "source": "change_18",
+      "target": "CVE-2025-0097"
+    },
+    {
+      "relation": "references",
+      "source_category": "security_bulletin",
+      "source": "change_18",
+      "target": "android_14"
+    },
+    {
+      "relation": "references",
+      "source_category": "security_bulletin",
+      "source": "change_18",
+      "target": "kernel_6.6"
+    },
+    {
+      "relation": "references",
+      "source_category": "security_bulletin",
+      "source": "change_18",
+      "target": "wi-fi_subsystem"
+    },
+    {
+      "relation": "references",
+      "source_category": "security_bulletin",
+      "source": "change_18",
+      "target": "wi-fi_hal"
+    },
+    {
+      "relation": "references",
+      "source_category": "security_bulletin",
+      "source": "change_18",
+      "target": "wi-fi"
+    },
+    {
+      "relation": "references",
+      "source_category": "security_bulletin",
+      "source": "change_18",
+      "target": "gpu_driver"
+    },
+    {
+      "relation": "references",
+      "source_category": "security_bulletin",
+      "source": "change_18",
+      "target": "mali"
+    },
+    {
+      "relation": "affects",
+      "source": "CVE-2025-0096",
+      "target": "wi-fi_subsystem"
+    },
+    {
+      "relation": "affects",
+      "source": "CVE-2025-0096",
+      "target": "wi-fi"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-0096",
+      "target": "CVE-2025-0097"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-0096",
+      "target": "SVE-2025-0303"
+    },
+    {
+      "relation": "affects",
+      "source": "CVE-2025-0097",
+      "target": "wi-fi"
+    },
+    {
+      "relation": "affects",
+      "source": "CVE-2025-0097",
+      "target": "gpu_driver"
+    },
+    {
+      "relation": "affects",
+      "source": "CVE-2025-0097",
+      "target": "mali"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-0097",
+      "target": "CVE-2025-0096"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_13",
+      "target": "CVE-2026-1340"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_13",
+      "target": "CVE-2026-1281"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_13",
+      "target": "CVE-2026-35616"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_13",
+      "target": "CVE-2026-3502"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_13",
+      "target": "CVE-2026-5281"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_13",
+      "target": "CVE-2026-1603"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_13",
+      "target": "CVE-2025-26399"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_13",
+      "target": "CVE-2021-22054"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_13",
+      "target": "CVE-2023-41974"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1340",
+      "target": "CVE-2026-1281"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1340",
+      "target": "CVE-2026-35616"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1340",
+      "target": "CVE-2026-3502"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1340",
+      "target": "CVE-2026-5281"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1340",
+      "target": "CVE-2026-1603"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1340",
+      "target": "CVE-2025-26399"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1340",
+      "target": "CVE-2021-22054"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1340",
+      "target": "CVE-2023-41974"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1281",
+      "target": "CVE-2026-35616"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1281",
+      "target": "CVE-2026-3502"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1281",
+      "target": "CVE-2026-5281"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1281",
+      "target": "CVE-2026-1603"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1281",
+      "target": "CVE-2025-26399"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1281",
+      "target": "CVE-2021-22054"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1281",
+      "target": "CVE-2023-41974"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-35616",
+      "target": "CVE-2026-3502"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-35616",
+      "target": "CVE-2026-5281"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-35616",
+      "target": "CVE-2026-1603"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-35616",
+      "target": "CVE-2025-26399"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-35616",
+      "target": "CVE-2021-22054"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-35616",
+      "target": "CVE-2023-41974"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-3502",
+      "target": "CVE-2026-5281"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-3502",
+      "target": "CVE-2026-1603"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-3502",
+      "target": "CVE-2025-26399"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-3502",
+      "target": "CVE-2021-22054"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-3502",
+      "target": "CVE-2023-41974"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-5281",
+      "target": "CVE-2026-1603"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-5281",
+      "target": "CVE-2025-26399"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-5281",
+      "target": "CVE-2021-22054"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-5281",
+      "target": "CVE-2023-41974"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1603",
+      "target": "CVE-2025-26399"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1603",
+      "target": "CVE-2021-22054"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2026-1603",
+      "target": "CVE-2023-41974"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-26399",
+      "target": "CVE-2021-22054"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-26399",
+      "target": "CVE-2023-41974"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2021-22054",
+      "target": "CVE-2023-41974"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_14",
+      "target": "CVE-2026-1340"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_14",
+      "target": "CVE-2026-1281"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_14",
+      "target": "CVE-2026-35616"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_14",
+      "target": "CVE-2026-3502"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_14",
+      "target": "CVE-2026-5281"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_19",
+      "target": "meets_virtual_integrity"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_19",
+      "target": "meets_basic_integrity"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_19",
+      "target": "play_integrity_api"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_20",
+      "target": "CVE-2025-0097"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_20",
+      "target": "CVE-2025-0096"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_20",
+      "target": "mali"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_20",
+      "target": "gpu_driver"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_20",
+      "target": "wi-fi_hal"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_21",
+      "target": "CVE-2025-0097"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_21",
+      "target": "CVE-2025-0096"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_21",
+      "target": "mali"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_21",
+      "target": "gpu_driver"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_21",
+      "target": "wi-fi_hal"
+    },
+    {
+      "relation": "references",
+      "source_category": "policy_update",
+      "source": "change_22",
+      "target": "READ_MEDIA_IMAGES"
+    },
+    {
+      "relation": "references",
+      "source_category": "policy_update",
+      "source": "change_22",
+      "target": "play_integrity_api"
+    },
+    {
+      "relation": "references",
+      "source_category": "policy_update",
+      "source": "change_22",
+      "target": "meets_strong_integrity"
+    },
+    {
+      "relation": "references",
+      "source_category": "policy_update",
+      "source": "change_22",
+      "target": "permissions_policy"
+    },
+    {
+      "relation": "references",
+      "source_category": "policy_update",
+      "source": "change_22",
+      "target": "photo_picker"
+    },
+    {
+      "relation": "references",
+      "source_category": "policy_update",
+      "source": "change_22",
+      "target": "ai-generated_content"
+    },
+    {
+      "relation": "references",
+      "source": "photo_picker",
+      "target": "READ_MEDIA_IMAGES"
+    },
+    {
+      "relation": "deprecates",
+      "source": "ai-generated_content",
+      "target": "READ_MEDIA_IMAGES"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_23",
+      "target": "meets_virtual_integrity"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_23",
+      "target": "meets_basic_integrity"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_23",
+      "target": "play_integrity_api"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_24",
+      "target": "CVE-2025-0098"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_24",
+      "target": "android_14"
+    },
+    {
+      "relation": "references",
+      "source_category": "cve_feed",
+      "source": "change_24",
+      "target": "camera_hal"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_25",
+      "target": "meets_virtual_integrity"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_25",
+      "target": "meets_basic_integrity"
+    },
+    {
+      "relation": "references",
+      "source_category": "developer_docs",
+      "source": "change_25",
+      "target": "play_integrity_api"
+    },
+    {
+      "relation": "references",
+      "source_category": "oem_bulletin",
+      "source": "change_26",
+      "target": "CVE-2025-0093"
+    },
+    {
+      "relation": "references",
+      "source_category": "oem_bulletin",
+      "source": "change_26",
+      "target": "CVE-2025-0096"
+    },
+    {
+      "relation": "references",
+      "source_category": "oem_bulletin",
+      "source": "change_26",
+      "target": "SVE-2025-0303"
+    },
+    {
+      "relation": "references",
+      "source_category": "oem_bulletin",
+      "source": "change_26",
+      "target": "secure_folder"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-0093",
+      "target": "CVE-2025-0096"
+    },
+    {
+      "relation": "co_occurs",
+      "source": "CVE-2025-0093",
+      "target": "SVE-2025-0303"
+    },
+    {
+      "relation": "affects",
+      "source": "SVE-2025-0303",
+      "target": "secure_folder"
+    },
+    {
+      "relation": "references",
+      "source_category": "oem_bulletin",
+      "source": "change_27",
+      "target": "CVE-2025-0096"
+    },
+    {
+      "relation": "references",
+      "source_category": "oem_bulletin",
+      "source": "change_27",
+      "target": "CVE-2025-0097"
+    },
+    {
+      "relation": "references",
+      "source_category": "oem_bulletin",
+      "source": "change_27",
+      "target": "modem"
+    },
+    {
+      "relation": "references",
+      "source_category": "oem_bulletin",
+      "source": "change_27",
+      "target": "baseband"
+    }
+  ]
+}

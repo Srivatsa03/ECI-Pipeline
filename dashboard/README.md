@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SENTINEL — Ecosystem Change Intelligence Console
 
-## Getting Started
+A command-deck dashboard for the ECI pipeline. SENTINEL continuously watches the
+Android security, API, and policy surface, triages every change with a
+multi-agent pipeline (**Scout → Sentinel → Coordinator → Graph → Benchmark**),
+and turns it into **evidence-backed action tickets**.
 
-First, run the development server:
+Built with Next.js 16, React 19, Tailwind v4, Recharts, and react-force-graph.
+
+## Runs fully offline
+
+The console serves every panel from an in-process dataset (`lib/data.js`) — **no
+Postgres, no Supabase, no network** required to run or demo it. The knowledge
+graph (`lib/data/knowledge_graph.json`) and RAG benchmark numbers
+(`lib/data/ablation_results.json`) are real artifacts produced by the pipeline.
+
+The only optional external call is the **Threat Assistant** chat, which uses
+Groq. Add a key to `.env.local` to enable it:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+GROQ_API_KEY=your_groq_key   # get one free at https://console.groq.com
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Getting started
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Next.js 16 needs Node **≥ 20.19 or 22.x**. The launcher script auto-selects a
+compatible Node (falls back to Homebrew `node@22`) and installs deps:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+./run-demo.sh
+```
 
-## Learn More
+…or manually:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Then open **http://localhost:4123** (the launcher's default port).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## What's inside
 
-## Deploy on Vercel
+| Route         | What it shows |
+|---------------|---------------|
+| `/`           | Command overview — live multi-agent pipeline, KPIs, pipeline posture, priority tickets |
+| `/tickets`    | Coordinator action tickets with recommended actions + supporting evidence |
+| `/changes`    | Raw change feed with Sentinel triage (relevance / risk / domain) |
+| `/graph`      | Interactive knowledge graph (CVEs ↔ components ↔ changes ↔ policy) |
+| `/analytics`  | **Benchmarks** — DeltaRAG + Graph-RAG retrieval-quality ablation |
+| `/sources`    | Monitored source registry by category |
+| `/chat`       | Groq-powered Threat Assistant grounded in the live pipeline state |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Architecture
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/api/*          → route handlers (stats, tickets, changes, graph,
+                     benchmarks, evidence, chat, pipeline)
+lib/data.js        → offline intelligence dataset (sources, changes,
+                     tickets, agent events)
+lib/db.js          → data-access layer (same API, now offline)
+components/
+  LivePipeline.js  → client-side streaming multi-agent run (no backend)
+  Sidebar.js       → console navigation + theme toggle
+```

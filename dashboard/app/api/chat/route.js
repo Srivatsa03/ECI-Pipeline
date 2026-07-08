@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { query } from '../../../lib/db';
+import { getChatContext } from '../../../lib/db';
 
 const SYSTEM_PROMPT = `You are an elite Threat Intelligence Chat Assistant built for the ECI (Ecosystem Change Intelligence) system.
 You help fraud operations and risk engineers understand recent Android security vulnerabilities and changes.
@@ -18,46 +18,6 @@ Rules:
 - Format responses with markdown (bullet points, bold text).
 - If information is not in the provided context, say so clearly.`;
 
-async function getPipelineContext() {
-  try {
-    const [sourcesRow] = await query('SELECT COUNT(*) as count FROM sources WHERE active = true');
-    const [changesRow] = await query('SELECT COUNT(*) as count FROM changes');
-    const [pendingRow] = await query("SELECT COUNT(*) as count FROM changes WHERE status = 'pending'");
-    const [escalatedRow] = await query("SELECT COUNT(*) as count FROM changes WHERE status = 'escalated'");
-
-    const stats = `Active Sources Monitored: ${sourcesRow.count}
-Total Changes Detected: ${changesRow.count}
-Pending Changes: ${pendingRow.count} | Escalated Changes: ${escalatedRow.count}`;
-
-    const tickets = await query(`
-      SELECT r.title, r.summary, r.priority, r.risk_score, s.name as source_name
-      FROM recommendations r
-      LEFT JOIN changes c ON r.change_id = c.id
-      LEFT JOIN sources s ON c.source_id = s.id
-      ORDER BY r.risk_score DESC LIMIT 10
-    `);
-
-    const ticketsText = tickets.length > 0
-      ? tickets.map(t => `Ticket: [${t.priority?.toUpperCase()}] ${t.title} (Risk: ${t.risk_score}, Source: ${t.source_name})\nSummary: ${t.summary}`).join('\n\n')
-      : 'No action tickets found.';
-
-    const changes = await query(`
-      SELECT c.id, c.diff_text, c.status, s.name as source_name, s.category
-      FROM changes c
-      LEFT JOIN sources s ON c.source_id = s.id
-      ORDER BY c.id DESC LIMIT 10
-    `);
-
-    const changesText = changes.length > 0
-      ? changes.map(c => `[change_${c.id}] (${c.source_name}, ${c.category}, status: ${c.status})\n${c.diff_text?.substring(0, 300) || 'No diff text'}`).join('\n\n')
-      : 'No recent changes found.';
-
-    return { stats, ticketsText, changesText };
-  } catch (e) {
-    return { stats: 'Unavailable', ticketsText: 'Unavailable', changesText: 'Unavailable' };
-  }
-}
-
 export async function POST(request) {
   try {
     const { query: userQuery } = await request.json();
@@ -71,7 +31,7 @@ export async function POST(request) {
       return NextResponse.json({ response: 'Error: GROQ_API_KEY is not configured.' }, { status: 500 });
     }
 
-    const { stats, ticketsText, changesText } = await getPipelineContext();
+    const { stats, ticketsText, changesText } = await getChatContext();
 
     const userPrompt = `=== SYSTEM PIPELINE STATUS ===
 ${stats}

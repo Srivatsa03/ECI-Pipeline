@@ -1,0 +1,306 @@
+{
+  "metadata": {
+    "top_k": 5,
+    "total_benchmark_queries": 110,
+    "query_type_counts": {
+      "exact_change": 35,
+      "multi_hop": 25,
+      "policy_security": 20,
+      "action_recommendation": 15,
+      "false_alarm": 15,
+      "total": 110
+    }
+  },
+  "results": {
+    "standard_rag": {
+      "variant": "standard_rag",
+      "num_queries": 95,
+      "mean_p_at_1": 0.9158,
+      "mean_p_at_5": 0.7411,
+      "mean_r_at_5": 0.9105,
+      "mean_ndcg_at_5": 0.9448,
+      "mrr": 0.9474,
+      "map_score": 0.9191,
+      "mean_freshness": 1.0,
+      "mean_stale_rate": 0.0,
+      "false_alarm_rate": 1.0,
+      "false_alarm_rejection_rate": 0.0,
+      "ci_p_at_1": [
+        0.8632,
+        0.9684
+      ],
+      "ci_ndcg_at_5": [
+        0.9101,
+        0.9739
+      ],
+      "ci_mrr": [
+        0.9105,
+        0.9842
+      ],
+      "by_type": {
+        "exact_change": {
+          "count": 35,
+          "mean_p_at_1": 0.8857,
+          "mean_ndcg_at_5": 0.9272,
+          "mrr": 0.9286
+        },
+        "multi_hop": {
+          "count": 25,
+          "mean_p_at_1": 1.0,
+          "mean_ndcg_at_5": 0.9944,
+          "mrr": 1.0
+        },
+        "policy_security": {
+          "count": 20,
+          "mean_p_at_1": 0.95,
+          "mean_ndcg_at_5": 0.9378,
+          "mrr": 0.95
+        },
+        "action_recommendation": {
+          "count": 15,
+          "mean_p_at_1": 0.8,
+          "mean_ndcg_at_5": 0.9126,
+          "mrr": 0.9
+        },
+        "false_alarm": {
+          "count": 15,
+          "mean_p_at_1": 0.0,
+          "mean_ndcg_at_5": 0.0,
+          "mrr": 0.0
+        }
+      }
+    },
+    "delta_rag": {
+      "variant": "delta_rag",
+      "num_queries": 95,
+      "mean_p_at_1": 0.9158,
+      "mean_p_at_5": 0.7411,
+      "mean_r_at_5": 0.9105,
+      "mean_ndcg_at_5": 0.9448,
+      "mrr": 0.9474,
+      "map_score": 0.9191,
+      "mean_freshness": 1.0,
+      "mean_stale_rate": 0.0,
+      "false_alarm_rate": 1.0,
+      "false_alarm_rejection_rate": 0.0,
+      "ci_p_at_1": [
+        0.8632,
+        0.9684
+      ],
+      "ci_ndcg_at_5": [
+        0.9101,
+        0.9739
+      ],
+      "ci_mrr": [
+        0.9105,
+        0.9842
+      ],
+      "by_type": {
+        "exact_change": {
+          "count": 35,
+          "mean_p_at_1": 0.8857,
+          "mean_ndcg_at_5": 0.9272,
+          "mrr": 0.9286
+        },
+        "multi_hop": {
+          "count": 25,
+          "mean_p_at_1": 1.0,
+          "mean_ndcg_at_5": 0.9944,
+          "mrr": 1.0
+        },
+        "policy_security": {
+          "count": 20,
+          "mean_p_at_1": 0.95,
+          "mean_ndcg_at_5": 0.9378,
+          "mrr": 0.95
+        },
+        "action_recommendation": {
+          "count": 15,
+          "mean_p_at_1": 0.8,
+          "mean_ndcg_at_5": 0.9126,
+          "mrr": 0.9
+        },
+        "false_alarm": {
+          "count": 15,
+          "mean_p_at_1": 0.0,
+          "mean_ndcg_at_5": 0.0,
+          "mrr": 0.0
+        }
+      }
+    },
+    "graph_rag_only": {
+      "variant": "graph_rag_only",
+      "num_queries": 95,
+      "mean_p_at_1": 0.9053,
+      "mean_p_at_5": 0.7747,
+      "mean_r_at_5": 0.9123,
+      "mean_ndcg_at_5": 0.9473,
+      "mrr": 0.9421,
+      "map_score": 0.9254,
+      "mean_freshness": 1.0,
+      "mean_stale_rate": 0.0,
+      "false_alarm_rate": 1.0,
+      "false_alarm_rejection_rate": 0.0,
+      "ci_p_at_1": [
+        0.8421,
+        0.9579
+      ],
+      "ci_ndcg_at_5": [
+        0.9139,
+        0.9754
+      ],
+      "ci_mrr": [
+        0.9,
+        0.9789
+      ],
+      "by_type": {
+        "exact_change": {
+          "count": 35,
+          "mean_p_at_1": 0.8571,
+          "mean_ndcg_at_5": 0.9304,
+          "mrr": 0.9143
+        },
+        "multi_hop": {
+          "count": 25,
+          "mean_p_at_1": 1.0,
+          "mean_ndcg_at_5": 0.9924,
+          "mrr": 1.0
+        },
+        "policy_security": {
+          "count": 20,
+          "mean_p_at_1": 0.95,
+          "mean_ndcg_at_5": 0.9378,
+          "mrr": 0.95
+        },
+        "action_recommendation": {
+          "count": 15,
+          "mean_p_at_1": 0.8,
+          "mean_ndcg_at_5": 0.9242,
+          "mrr": 0.9
+        },
+        "false_alarm": {
+          "count": 15,
+          "mean_p_at_1": 0.0,
+          "mean_ndcg_at_5": 0.0,
+          "mrr": 0.0
+        }
+      }
+    },
+    "delta_rag_graph_rag": {
+      "variant": "delta_rag_graph_rag",
+      "num_queries": 95,
+      "mean_p_at_1": 0.9158,
+      "mean_p_at_5": 0.7411,
+      "mean_r_at_5": 0.9105,
+      "mean_ndcg_at_5": 0.9448,
+      "mrr": 0.9474,
+      "map_score": 0.9191,
+      "mean_freshness": 1.0,
+      "mean_stale_rate": 0.0,
+      "false_alarm_rate": 1.0,
+      "false_alarm_rejection_rate": 0.0,
+      "ci_p_at_1": [
+        0.8632,
+        0.9684
+      ],
+      "ci_ndcg_at_5": [
+        0.9101,
+        0.9739
+      ],
+      "ci_mrr": [
+        0.9105,
+        0.9842
+      ],
+      "by_type": {
+        "exact_change": {
+          "count": 35,
+          "mean_p_at_1": 0.8857,
+          "mean_ndcg_at_5": 0.9272,
+          "mrr": 0.9286
+        },
+        "multi_hop": {
+          "count": 25,
+          "mean_p_at_1": 1.0,
+          "mean_ndcg_at_5": 0.9944,
+          "mrr": 1.0
+        },
+        "policy_security": {
+          "count": 20,
+          "mean_p_at_1": 0.95,
+          "mean_ndcg_at_5": 0.9378,
+          "mrr": 0.95
+        },
+        "action_recommendation": {
+          "count": 15,
+          "mean_p_at_1": 0.8,
+          "mean_ndcg_at_5": 0.9126,
+          "mrr": 0.9
+        },
+        "false_alarm": {
+          "count": 15,
+          "mean_p_at_1": 0.0,
+          "mean_ndcg_at_5": 0.0,
+          "mrr": 0.0
+        }
+      }
+    },
+    "full_system": {
+      "variant": "full_system",
+      "num_queries": 95,
+      "mean_p_at_1": 0.9158,
+      "mean_p_at_5": 0.7411,
+      "mean_r_at_5": 0.9105,
+      "mean_ndcg_at_5": 0.9448,
+      "mrr": 0.9474,
+      "map_score": 0.9191,
+      "mean_freshness": 1.0,
+      "mean_stale_rate": 0.0,
+      "false_alarm_rate": 1.0,
+      "false_alarm_rejection_rate": 0.0,
+      "ci_p_at_1": [
+        0.8632,
+        0.9684
+      ],
+      "ci_ndcg_at_5": [
+        0.9101,
+        0.9739
+      ],
+      "ci_mrr": [
+        0.9105,
+        0.9842
+      ],
+      "by_type": {
+        "exact_change": {
+          "count": 35,
+          "mean_p_at_1": 0.8857,
+          "mean_ndcg_at_5": 0.9272,
+          "mrr": 0.9286
+        },
+        "multi_hop": {
+          "count": 25,
+          "mean_p_at_1": 1.0,
+          "mean_ndcg_at_5": 0.9944,
+          "mrr": 1.0
+        },
+        "policy_security": {
+          "count": 20,
+          "mean_p_at_1": 0.95,
+          "mean_ndcg_at_5": 0.9378,
+          "mrr": 0.95
+        },
+        "action_recommendation": {
+          "count": 15,
+          "mean_p_at_1": 0.8,
+          "mean_ndcg_at_5": 0.9126,
+          "mrr": 0.9
+        },
+        "false_alarm": {
+          "count": 15,
+          "mean_p_at_1": 0.0,
+          "mean_ndcg_at_5": 0.0,
+          "mrr": 0.0
+        }
+      }
+    }
+  }
+}
