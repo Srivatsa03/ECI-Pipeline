@@ -1,0 +1,52 @@
+# Local full-stack ECI: Postgres + pgvector behind the FastAPI service.
+#
+#   docker compose up -d db          # just the database
+#   docker compose up --build        # database + API on :8000
+#
+# The console is intentionally not in here. Its whole point is that it runs
+# standalone with no infrastructure; point it at this stack when you want the
+# live path:
+#
+#   cd dashboard
+#   ECI_DATA_SOURCE=api ECI_API_URL=http://localhost:8000 ./run-demo.sh
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: eci-db
+    environment:
+      POSTGRES_USER: eci
+      POSTGRES_PASSWORD: eci
+      POSTGRES_DB: eci
+    ports:
+      - "5432:5432"
+    volumes:
+      - eci-pgdata:/var/lib/postgresql/data
+      - ./scripts/init_pgvector.sql:/docker-entrypoint-initdb.d/00-pgvector.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eci -d eci"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: eci-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      USE_SUPABASE: "true"
+      DATABASE_URL: postgresql+psycopg2://eci:eci@db:5432/eci
+      ECI_CORS_ORIGINS: http://localhost:3000,http://localhost:4123
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+    ports:
+      - "8000:8000"
+    volumes:
+      # Knowledge graph and benchmark artifacts are read from disk.
+      - ./data:/app/data
+
+volumes:
+  eci-pgdata:

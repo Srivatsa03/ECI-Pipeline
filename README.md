@@ -9,7 +9,7 @@ Front-ended by **SENTINEL**, a real-time monitoring console.
 
 > Built as an industry capstone with **TransUnion**.
 
-`Python` · `FastAPI` · `PostgreSQL` + `pgvector` · `NetworkX` · `Groq LLM` · `AWS Lambda` · `Next.js` · `Recharts` · `Vercel` · `Prometheus`
+`Python` · `FastAPI` · `PostgreSQL` + `pgvector` · `SQLAlchemy` · `NetworkX` · `Groq LLM` · `Next.js` · `React` · `Recharts` · `Docker`
 
 ---
 
@@ -92,26 +92,84 @@ Retrieval quality was measured with an **ablation study over 110 gold queries**
 - **~100% P@1 on multi-hop queries** for the full system — the Graph-RAG payoff
 - **Sub-second latency** on the live monitoring dashboard
 - **100% of manual pipeline steps automated** (ingest → ticket)
-- Least-privilege IAM and secrets management across every cloud service account
 
 ## Architecture & stack
 
 - **Retrieval:** `pgvector` for semantic recall, `NetworkX` for relationship reasoning
 - **Agents:** Sentinel (risk triage) and Coordinator (evidence + ticketing), both on **Groq** LLMs
-- **Serving:** FastAPI backend on **AWS Lambda**, Next.js console on **Vercel**
-- **Observability:** Prometheus metrics, structured pipeline logging
+- **Storage:** SQLAlchemy models over PostgreSQL + pgvector, or SQLite for local work
+- **Serving:** FastAPI service (`api/`) over the pipeline's data layer, Next.js console on top
+- **Observability:** structured pipeline logging (`scripts/pipeline_logger.py`), `/health` endpoint
+
+### One contract, two data sources
+
+The console is built so it can run with nothing behind it. `dashboard/lib/db.js`
+picks an implementation at import time and every page is blind to the choice:
+
+| `ECI_DATA_SOURCE` | Reads | Needs |
+|---|---|---|
+| `offline` (default) | `lib/data.js`, an in-process dataset | nothing |
+| `api` | the FastAPI service | Postgres or SQLite + `uvicorn` |
+
+That is why `./run-demo.sh` still works on a plane, and why the same build talks
+to a real database in production without a code change.
+
+## Run the full stack
+
+```bash
+# 1. Database + API (Postgres 16 + pgvector)
+docker compose up --build          # API on :8000, docs at /docs
+
+# 2. Load the seed dataset so there is something to serve
+node dashboard/scripts/export-dataset.mjs
+python -m scripts.seed_demo_data
+
+# 3. Console, pointed at the API
+cd dashboard
+ECI_DATA_SOURCE=api ECI_API_URL=http://localhost:8000 ./run-demo.sh
+```
+
+Without Docker, SQLite is the default and needs no setup at all:
+
+```bash
+pip install -r requirements.txt
+python -m scripts.seed_demo_data
+uvicorn api.main:app --reload --port 8000
+```
+
+### API surface
+
+| Method | Route | Purpose |
+|---|---|---|
+| `GET` | `/health` | Liveness + database reachability |
+| `GET` | `/api/stats` | Counts across sources, changes, events, tickets |
+| `GET` | `/api/sources` | Monitored source registry |
+| `GET` | `/api/changes` | Change feed with Sentinel triage attached |
+| `GET` | `/api/tickets` | Coordinator action tickets, ranked by risk |
+| `POST` | `/api/evidence` | Resolve citation chunk IDs to source text |
+| `GET` | `/api/graph` | Raw knowledge graph (styling stays client-side) |
+| `GET` | `/api/benchmarks` | RAG ablation results |
+| `GET` | `/api/chat-context` | Grounding context for the Threat Assistant |
+| `POST` | `/api/pipeline/run` | Trigger stages in the background |
+| `GET` | `/api/pipeline/runs` | Run history and status |
+
+Interactive docs are generated at `http://localhost:8000/docs`.
 
 ## Repository layout
 
 ```
 ECI-Pipeline/
 ├── agents/            # Sentinel, Coordinator, Chat (LLM agents)
+├── api/               # FastAPI service — main, schemas, service (query layer)
 ├── rag/               # chunker, embedder, entity_extractor, knowledge_graph, retriever
 ├── scripts/           # scraper (Scout), diff_detector (DeltaRAG), seeding, init
 ├── evaluation/        # ablation, benchmark, golden_dataset, metrics
 ├── config/            # settings + sources.json (the monitored feeds)
 ├── utils/             # db + shared helpers
-├── dashboard/         # SENTINEL — Next.js console (runs offline)
+├── dashboard/         # SENTINEL — Next.js console (offline or API-backed)
+│   └── lib/           # db.js selector, db.offline.js, db.api.js, graph-style.js
+├── Dockerfile         # API image
+├── docker-compose.yml # Postgres + pgvector + API
 ├── main.py            # pipeline entrypoint
 └── run_pipeline.py    # orchestrated end-to-end run
 ```

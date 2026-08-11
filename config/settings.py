@@ -18,16 +18,25 @@ KNOWLEDGE_GRAPH_PATH = DATA_DIR / "knowledge_graph.json"
 # Ensure directories exist
 DATA_DIR.mkdir(exist_ok=True)
 
-# ── Supabase / PostgreSQL ─────────────────────────────────────────
-USE_SUPABASE = os.environ.get("USE_SUPABASE", "true").lower() == "true"
+# ── PostgreSQL / SQLite ───────────────────────────────────────────
+_WANT_POSTGRES = os.environ.get("USE_SUPABASE", "true").lower() == "true"
 
-SUPABASE_URL = os.environ.get("DATABASE_URL", "")
+SUPABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 
-# SQLAlchemy engine URL — swap based on toggle
+# Fall back to SQLite when Postgres is requested but no URL is configured.
+# Without this, create_engine("") raises at import time and every entry point
+# (CLI, API, tests) dies with an error that says nothing about the real cause.
+USE_SUPABASE = _WANT_POSTGRES and bool(SUPABASE_URL)
+
 if USE_SUPABASE:
     DATABASE_URL = SUPABASE_URL
 else:
     DATABASE_URL = f"sqlite:///{SQLITE_DB_PATH}"
+    if _WANT_POSTGRES:
+        print(
+            "[config] USE_SUPABASE=true but DATABASE_URL is empty — "
+            f"falling back to SQLite at {SQLITE_DB_PATH}"
+        )
 
 # Load sources from JSON → list of tuples for seed_sources.py
 def _load_sources():

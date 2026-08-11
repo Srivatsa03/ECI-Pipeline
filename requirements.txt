@@ -1,3 +1,4 @@
+# Pipeline
 requests
 beautifulsoup4
 chromadb
@@ -6,7 +7,15 @@ nomic
 sentence-transformers
 lxml
 networkx
+
+# Storage
 psycopg2-binary
 pgvector
 sqlalchemy
 python-dotenv
+
+# API service (api/main.py)
+# Kept in the same file as the pipeline because /api/pipeline/run executes the
+# pipeline stages in-process, so the service needs the full dependency set.
+fastapi
+uvicorn[standard]
