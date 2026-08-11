@@ -261,6 +261,11 @@ def get_benchmarks() -> Dict[str, Any]:
     ]
 
     full = results.get("full_system") or results.get("delta_rag_graph_rag") or {}
+    # false_alarm queries have no expected source category, so every retrieval
+    # metric short-circuits to 0.0 for them. Charting that reads as a total
+    # failure when it actually measures nothing; their real score is the
+    # rejection rate. evaluation/metrics.py now drops them at the source, and
+    # this filter covers result files generated before that fix.
     by_type = [
         {
             "type": qtype.replace("_", " "),
@@ -270,6 +275,7 @@ def get_benchmarks() -> Dict[str, Any]:
             "count": m.get("count"),
         }
         for qtype, m in (full.get("by_type") or {}).items()
+        if qtype != "false_alarm"
     ]
 
     return {"metadata": raw.get("metadata") or {}, "variants": variants, "byType": by_type}

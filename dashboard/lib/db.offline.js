@@ -153,13 +153,20 @@ export async function getBenchmarks() {
   }));
 
   const full = results.full_system || results.delta_rag_graph_rag || {};
-  const byType = Object.entries(full.by_type || {}).map(([type, m]) => ({
-    type: type.replace(/_/g, ' '),
-    p_at_1: m.mean_p_at_1,
-    ndcg_at_5: m.mean_ndcg_at_5,
-    mrr: m.mrr,
-    count: m.count,
-  }));
+  // false_alarm queries have no expected source category, so every retrieval
+  // metric short-circuits to 0.0 for them. Charting that reads as a total
+  // failure when it actually measures nothing. Their real score is the
+  // rejection rate, surfaced separately. (evaluation/metrics.py now drops
+  // them at the source; this filter covers artifacts generated before that.)
+  const byType = Object.entries(full.by_type || {})
+    .filter(([type]) => type !== 'false_alarm')
+    .map(([type, m]) => ({
+      type: type.replace(/_/g, ' '),
+      p_at_1: m.mean_p_at_1,
+      ndcg_at_5: m.mean_ndcg_at_5,
+      mrr: m.mrr,
+      count: m.count,
+    }));
 
   return { metadata: ABLATION.metadata || {}, variants, byType };
 }

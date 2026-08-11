@@ -86,11 +86,38 @@ export default function AnalyticsPage() {
           <Metric label="Mean Recip. Rank" value={pct(full.mrr)} accent="var(--accent-blue)" />
           <Metric label="MAP" value={pct(full.map)} accent="var(--accent-purple)" />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 28 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
           <Metric label="Recall @5" value={pct(full.recall_at_5)} />
           <Metric label="Freshness" value={pct(full.freshness)} accent="var(--accent-teal)" />
           <Metric label="Stale Rate" value={pct(full.stale_rate)} />
+          <Metric
+            label="False-alarm rejection"
+            value={pct(full.false_alarm_rejection)}
+            accent={full.false_alarm_rejection ? 'var(--accent-teal)' : 'var(--del)'}
+          />
         </div>
+
+        {/* The weakest number on the page gets stated, not buried. */}
+        {full.false_alarm_rejection === 0 && (
+          <div
+            style={{
+              border: '1px solid var(--border)',
+              borderLeft: '2px solid var(--del)',
+              borderRadius: 8,
+              padding: '12px 16px',
+              marginBottom: 28,
+              fontSize: 12.5,
+              color: 'var(--text-secondary)',
+              lineHeight: 1.65,
+            }}
+          >
+            <strong style={{ color: 'var(--del)' }}>No false-alarm rejection.</strong>{' '}
+            Across all 15 control queries that should retrieve nothing, every variant
+            returned a confident match — a rejection rate of 0%. Retrieval has no
+            abstain path: it always answers. That is the clearest known gap in this
+            system, and it is a threshold problem, not a ranking one.
+          </div>
+        )}
 
         {/* Variant comparison */}
         <div className="glass-card" style={{ padding: '22px 24px 12px', marginBottom: 24 }}>

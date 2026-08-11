@@ -321,10 +321,21 @@ def aggregate_metrics(
     fresh_vals = [m.freshness for m in relevant_queries]
     stale_vals = [m.stale_rate for m in relevant_queries]
 
-    # Per query-type breakdown
+    # Per query-type breakdown.
+    #
+    # FALSE_ALARM is deliberately excluded. Those queries carry
+    # expected_source_categories=[] by definition — there is no correct
+    # document to retrieve — and every retrieval metric here short-circuits
+    # to 0.0 on an empty category list. Reporting P@1 for them produces a
+    # hard 0.0 that looks like a catastrophic result but measures nothing.
+    # The meaningful score for false-alarm queries is whether the system
+    # declined to answer, which is false_alarm_rate / its rejection
+    # complement, reported separately on AggregateMetrics.
     from evaluation.benchmark import ALL_QUERY_TYPES
     by_type: dict = {}
     for qt in ALL_QUERY_TYPES:
+        if qt == FALSE_ALARM:
+            continue
         qt_queries = [m for m in per_query if m.query_type == qt]
         if not qt_queries:
             continue

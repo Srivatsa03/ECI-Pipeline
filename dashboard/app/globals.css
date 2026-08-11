@@ -689,3 +689,94 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* ============================================================
+   MOBILE
+
+   The console was desktop-only: a fixed 264px sidebar against a
+   margin-left of the same, which leaves roughly 160px of content
+   on a phone. Below 860px the sidebar becomes a horizontal rail
+   that scrolls, and the layout goes single-column.
+   ============================================================ */
+
+@media (max-width: 860px) {
+  .sidebar {
+    position: sticky;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 10px;
+    scrollbar-width: none;
+  }
+  .sidebar::-webkit-scrollbar { display: none; }
+
+  /* Group captions and the status footer are noise on a rail.
+     !important because Sidebar.js sets these inline. */
+  .sidebar-group-label,
+  .sidebar-footer {
+    display: none !important;
+  }
+
+  .sidebar-brand {
+    padding: 0 12px 0 2px !important;
+    border-bottom: none !important;
+    flex: 0 0 auto;
+  }
+  .sidebar-brand .eyebrow { display: none; }
+
+  /* nav holds group wrappers, which hold the links. Both have to go
+     horizontal or the rail stays as tall as the tallest group. */
+  .sidebar nav {
+    display: flex;
+    gap: 4px;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  .sidebar-group {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 0 !important;
+  }
+
+  .sidebar-link {
+    padding: 8px 13px;
+    white-space: nowrap;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .sidebar-link.active::before {
+    top: auto;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    height: 2px;
+    border-radius: 3px 3px 0 0;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px 16px 40px;
+  }
+
+  .hero { padding: 20px 16px 18px; border-radius: 14px; }
+  .hero-title { margin: 16px 0 8px; }
+
+  /* Scores stack under the title instead of crushing it. */
+  .strip-cell { flex-basis: 50%; }
+
+  /* Wide tables and charts scroll rather than forcing the page wide. */
+  .data-table { display: block; overflow-x: auto; white-space: nowrap; }
+}
+
+@media (max-width: 560px) {
+  .strip-cell { flex-basis: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+  .strip-cell:last-child { border-bottom: none; }
+  .hero-risk { font-size: 44px; }
+}

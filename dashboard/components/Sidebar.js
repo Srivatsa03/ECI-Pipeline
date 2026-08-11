@@ -37,7 +37,7 @@ export default function Sidebar() {
   return (
     <div className="sidebar">
       {/* Brand */}
-      <div style={{ padding: '24px 22px 18px', borderBottom: '1px solid var(--border)' }}>
+      <div className="sidebar-brand" style={{ padding: '24px 22px 18px', borderBottom: '1px solid var(--border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
           <div style={{
             position: 'relative', width: 38, height: 38, borderRadius: 11,
@@ -67,8 +67,8 @@ export default function Sidebar() {
       {/* Nav */}
       <nav style={{ padding: '14px 0', flex: 1, overflowY: 'auto' }}>
         {groups.map(group => (
-          <div key={group} style={{ marginBottom: 10 }}>
-            <div className="eyebrow" style={{ padding: '6px 22px', fontSize: 9.5 }}>{group}</div>
+          <div key={group} className="sidebar-group" style={{ marginBottom: 10 }}>
+            <div className="eyebrow sidebar-group-label" style={{ padding: '6px 22px', fontSize: 9.5 }}>{group}</div>
             {navItems.filter(i => i.group === group).map(item => (
               <Link
                 key={item.href}
@@ -84,7 +84,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div style={{ padding: '14px 22px', borderTop: '1px solid var(--border)' }}>
+      <div className="sidebar-footer" style={{ padding: '14px 22px', borderTop: '1px solid var(--border)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <span className="status-pill" style={{ padding: '5px 10px' }}>
             <span className="live-dot" /> ONLINE

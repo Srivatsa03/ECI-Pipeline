@@ -88,10 +88,35 @@ GROQ_API_KEY=your_groq_key
 Retrieval quality was measured with an **ablation study over 110 gold queries**
 (`evaluation/`), comparing Standard RAG, DeltaRAG, Graph-RAG, and the full system:
 
-- **~93% retrieval precision** — P@1 ≈ 0.92, nDCG@5 ≈ 0.95, MRR ≈ 0.95
-- **~100% P@1 on multi-hop queries** for the full system — the Graph-RAG payoff
+- **~93% retrieval precision** across 95 scored queries — P@1 ≈ 0.92, nDCG@5 ≈ 0.95, MRR ≈ 0.95
+- **100% P@1 on multi-hop queries**, holding across every variant
 - **Sub-second latency** on the live monitoring dashboard
 - **100% of manual pipeline steps automated** (ingest → ticket)
+
+### What the ablation actually showed
+
+The honest reading, which the `/analytics` page states in full:
+
+**The ablation is a null result.** All five variants land within 1.1 points of
+each other on P@1, and plain vector retrieval already scores 1.0 on multi-hop
+queries. On this benchmark DeltaRAG and Graph-RAG do not measurably beat the
+baseline. The multi-hop number above is real, but it is not evidence for the
+graph layer — the baseline gets there too.
+
+Two things explain that, and neither is settled:
+
+1. **The benchmark does not discriminate.** The baseline scores 0.89–1.0 on
+   nearly every category, so there is almost no headroom for a graph layer to
+   show up in. A harder query set — multi-hop chains that vector similarity
+   genuinely cannot resolve — would be a real test. This one isn't.
+2. **Retrieval never abstains.** False-alarm rejection is **0%**: across all 15
+   control queries that should return nothing, every variant returned a
+   confident match. That is the clearest known gap in the system, and it is a
+   confidence-threshold problem rather than a ranking one.
+
+Fixing the benchmark to discriminate, and giving retrieval an abstain path, are
+the two open work items. Claiming a Graph-RAG win from this data would not
+survive a careful reading of it.
 
 ## Architecture & stack
 
