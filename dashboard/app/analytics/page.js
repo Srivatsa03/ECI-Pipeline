@@ -46,12 +46,23 @@ export default function AnalyticsPage() {
   const full = variants.find(v => v.key === 'full_system') || variants[variants.length - 1] || {};
   const pct = (x) => x == null ? '—' : `${(x * 100).toFixed(1)}%`;
 
+  // Plain identifiers as dataKeys, display names via each Bar's `name`.
+  // (The bars rendering flat was react-smooth stalling inside
+  // ResponsiveContainer, fixed with isAnimationActive={false} below — but
+  // keeping the keys simple avoids Recharts' path-getter semantics entirely.)
   const variantChart = variants.map(v => ({
     name: v.label,
-    'P@1': +(v.p_at_1 * 100).toFixed(1),
-    'nDCG@5': +(v.ndcg_at_5 * 100).toFixed(1),
-    'MRR': +(v.mrr * 100).toFixed(1),
+    p1: +(v.p_at_1 * 100).toFixed(1),
+    ndcg: +(v.ndcg_at_5 * 100).toFixed(1),
+    mrr: +(v.mrr * 100).toFixed(1),
   }));
+
+  // The ablation is a null result: every variant lands within ~1 point of the
+  // others. Say so on the page rather than letting a chart imply a difference
+  // that the numbers do not support.
+  const spread = variantChart.length
+    ? Math.max(...variantChart.map(v => v.p1)) - Math.min(...variantChart.map(v => v.p1))
+    : 0;
 
   const radarData = byType.map(t => ({ type: t.type, score: +(t.ndcg_at_5 * 100).toFixed(1) }));
   const typeColors = ['#f5b544', '#34d399', '#5e9bff', '#a78bfa', '#ff5c5c'];
@@ -84,19 +95,40 @@ export default function AnalyticsPage() {
         {/* Variant comparison */}
         <div className="glass-card" style={{ padding: '22px 24px 12px', marginBottom: 24 }}>
           <div className="eyebrow" style={{ marginBottom: 4 }}>Retrieval quality by system variant</div>
-          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 18 }}>
-            Higher is better · scores as % · isolating DeltaRAG vs Graph-RAG contributions
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 14 }}>
+            Scores as % · full 0–100 scale, so the bar heights are the real numbers
           </div>
+
+          {spread < 2 && (
+            <div
+              style={{
+                border: '1px solid var(--border)',
+                borderLeft: '2px solid var(--warn)',
+                borderRadius: 8,
+                padding: '10px 14px',
+                marginBottom: 18,
+                fontSize: 12.5,
+                color: 'var(--text-secondary)',
+                lineHeight: 1.6,
+              }}
+            >
+              <strong style={{ color: 'var(--warn)' }}>Null result.</strong> All five
+              variants land within {spread.toFixed(1)} points of each other on P@1. On this
+              benchmark, DeltaRAG and Graph-RAG do not measurably beat standard vector
+              retrieval. The per-query-type breakdown below is where the real variation is.
+            </div>
+          )}
+
           <ResponsiveContainer width="100%" height={320}>
             <BarChart data={variantChart} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={GRID} vertical={false} />
-              <XAxis dataKey="name" stroke={AXIS} tick={{ fontSize: 11, fontFamily: 'IBM Plex Mono, monospace' }} />
-              <YAxis stroke={AXIS} domain={[60, 100]} tick={{ fontSize: 11, fontFamily: 'IBM Plex Mono, monospace' }} />
+              <XAxis dataKey="name" stroke={AXIS} tick={{ fontSize: 11, fontFamily: 'var(--font-mono), monospace' }} />
+              <YAxis stroke={AXIS} domain={[0, 100]} tick={{ fontSize: 11, fontFamily: 'var(--font-mono), monospace' }} />
               <Tooltip {...TOOLTIP} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
-              <Legend wrapperStyle={{ fontSize: 12, fontFamily: 'IBM Plex Mono, monospace' }} />
-              <Bar dataKey="P@1" fill="#f5b544" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="nDCG@5" fill="#34d399" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="MRR" fill="#5e9bff" radius={[3, 3, 0, 0]} />
+              <Legend wrapperStyle={{ fontSize: 12, fontFamily: 'var(--font-mono), monospace' }} />
+              <Bar name="P@1" dataKey="p1" fill="#b6a6ff" radius={[3, 3, 0, 0]} isAnimationActive={false} />
+              <Bar name="nDCG@5" dataKey="ndcg" fill="#5fd9a6" radius={[3, 3, 0, 0]} isAnimationActive={false} />
+              <Bar name="MRR" dataKey="mrr" fill="#f0b458" radius={[3, 3, 0, 0]} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -111,7 +143,7 @@ export default function AnalyticsPage() {
                 <PolarGrid stroke={GRID} />
                 <PolarAngleAxis dataKey="type" tick={{ fontSize: 10.5, fill: AXIS, fontFamily: 'IBM Plex Mono, monospace' }} />
                 <PolarRadiusAxis domain={[70, 100]} tick={{ fontSize: 9, fill: 'rgba(164,167,180,0.5)' }} stroke={GRID} />
-                <Radar dataKey="score" stroke="#f5b544" fill="#f5b544" fillOpacity={0.35} />
+                <Radar dataKey="score" stroke="#f5b544" fill="#f5b544" fillOpacity={0.35} isAnimationActive={false} />
                 <Tooltip {...TOOLTIP} />
               </RadarChart>
             </ResponsiveContainer>
@@ -127,7 +159,7 @@ export default function AnalyticsPage() {
                 <XAxis dataKey="type" stroke={AXIS} tick={{ fontSize: 10, fontFamily: 'IBM Plex Mono, monospace' }} interval={0} angle={-12} textAnchor="end" height={54} />
                 <YAxis stroke={AXIS} domain={[0, 100]} tick={{ fontSize: 11, fontFamily: 'IBM Plex Mono, monospace' }} />
                 <Tooltip {...TOOLTIP} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
-                <Bar dataKey="p1" radius={[3, 3, 0, 0]}>
+                <Bar dataKey="p1" radius={[3, 3, 0, 0]} isAnimationActive={false}>
                   {byType.map((_, i) => <Cell key={i} fill={typeColors[i % typeColors.length]} />)}
                 </Bar>
               </BarChart>

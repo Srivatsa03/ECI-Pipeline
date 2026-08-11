@@ -2,179 +2,240 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import LivePipeline from '../components/LivePipeline';
+import DiffBlock from '../components/DiffBlock';
 
-function StatCard({ label, value, sub, variant, accent }) {
-  return (
-    <div className={`glass-card stat-card reticle ${variant}`} style={{ padding: '22px 22px 20px' }}>
-      <div className="eyebrow" style={{ marginBottom: 14 }}>{label}</div>
-      <div className="metric" style={{ fontSize: 40, fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1 }}>
-        {value}
-      </div>
-      {sub && (
-        <div style={{ fontSize: 12.5, color: accent || 'var(--text-secondary)', marginTop: 8, fontFamily: 'var(--font-mono)' }}>
-          {sub}
-        </div>
-      )}
-    </div>
-  );
+function riskColor(score) {
+  if (score >= 9) return 'var(--del)';
+  if (score >= 7) return 'var(--warn)';
+  return 'var(--text-secondary)';
 }
 
-function TicketRow({ ticket, onOpen }) {
-  const badgeClass = ticket.priority === 'critical' ? 'badge-critical'
-    : ticket.priority === 'high' ? 'badge-high'
-    : ticket.priority === 'medium' ? 'badge-medium' : 'badge-low';
-  const riskClass = ticket.riskScore >= 9 ? 'risk-critical'
-    : ticket.riskScore >= 7 ? 'risk-high' : 'risk-medium';
+function relativeTime(iso) {
+  if (!iso) return 'unknown';
+  const diff = Date.now() - new Date(iso).getTime();
+  const hours = Math.round(diff / 3_600_000);
+  if (hours < 1) return 'just now';
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.round(hours / 24);
+  return `${days}d ago`;
+}
+
+function TicketRow({ ticket, change }) {
+  const added = change?.diff_json?.added_lines?.length ?? 0;
+  const deleted = change?.diff_json?.deleted_lines?.length ?? 0;
 
   return (
-    <tr style={{ cursor: 'pointer' }} onClick={() => onOpen?.(ticket)}>
-      <td>
-        <div className={`risk-meter ${riskClass} ${ticket.riskScore >= 9 ? 'pulse-critical' : ''}`}>
-          {ticket.riskScore}
-        </div>
-      </td>
-      <td><span className={`badge ${badgeClass}`}>{ticket.priority}</span></td>
-      <td>
-        <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, maxWidth: 460 }}>
+    <a
+      href="/tickets"
+      className="glass-card"
+      style={{
+        display: 'flex',
+        alignItems: 'stretch',
+        gap: 0,
+        padding: '14px 18px',
+        marginBottom: 8,
+        textDecoration: 'none',
+        color: 'inherit',
+      }}
+    >
+      <div className="spine" aria-hidden="true">
+        <span className="s-add">+{added}</span>
+        <span className="s-del">−{deleted}</span>
+      </div>
+
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>
           {ticket.title}
         </div>
-        <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.5, maxWidth: 560 }}>
-          {ticket.summary?.substring(0, 118)}…
+        <div
+          className="mono"
+          style={{ fontSize: 10.5, color: 'var(--text-muted)' }}
+        >
+          {ticket.sourceName} · {ticket.recommendedActions?.length || 0} actions ·{' '}
+          {ticket.ownerSuggestion || 'unassigned'}
         </div>
-      </td>
-      <td>
-        <span className={`category-tag cat-${ticket.sourceCategory || ''}`}>
-          {ticket.sourceCategory?.replace('_', ' ') || '—'}
-        </span>
-      </td>
-      <td className="mono" style={{ color: 'var(--text-secondary)', fontSize: 13 }}>
-        {ticket.recommendedActions?.length || 0} actions
-      </td>
-    </tr>
+      </div>
+
+      <div
+        className="mono"
+        style={{
+          fontSize: 20,
+          fontWeight: 600,
+          letterSpacing: '-0.05em',
+          color: riskColor(ticket.riskScore),
+          alignSelf: 'center',
+          paddingLeft: 16,
+        }}
+      >
+        {ticket.riskScore?.toFixed(1)}
+      </div>
+    </a>
   );
 }
 
 export default function DashboardPage() {
   const [stats, setStats] = useState(null);
   const [tickets, setTickets] = useState([]);
+  const [changes, setChanges] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/stats').then(r => r.json()),
-      fetch('/api/tickets').then(r => r.json()),
-    ]).then(([s, t]) => {
-      setStats(s);
-      setTickets(Array.isArray(t) ? t : []);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+      fetch('/api/stats').then((r) => r.json()),
+      fetch('/api/tickets').then((r) => r.json()),
+      fetch('/api/changes').then((r) => r.json()),
+    ])
+      .then(([s, t, c]) => {
+        setStats(s);
+        setTickets(Array.isArray(t) ? t : []);
+        setChanges(Array.isArray(c) ? c : []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   if (loading) {
     return (
       <>
         <Sidebar />
-        <div className="main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-          <div className="eyebrow">Booting SENTINEL console…</div>
+        <div
+          className="main-content"
+          style={{ display: 'grid', placeItems: 'center', height: '100vh' }}
+        >
+          <div className="eyebrow">Reading the change surface…</div>
         </div>
       </>
     );
   }
 
-  const criticalCount = tickets.filter(t => t.priority === 'critical').length;
-  const highCount = tickets.filter(t => t.priority === 'high').length;
-
-  const posture = [
-    { label: 'Pending', count: stats?.pending || 0, color: 'var(--accent-amber)' },
-    { label: 'Triaged', count: stats?.triaged || 0, color: 'var(--accent-blue)' },
-    { label: 'Escalated', count: stats?.escalated || 0, color: 'var(--accent-red)' },
-    { label: 'Closed', count: stats?.closed || 0, color: 'var(--accent-teal)' },
-  ];
-  const postureTotal = posture.reduce((a, b) => a + b.count, 0) || 1;
+  const byId = new Map(changes.map((c) => [c.id, c]));
+  const lead = tickets[0];
+  const leadChange = lead ? byId.get(lead.changeId) : null;
+  const criticalCount = tickets.filter((t) => t.priority === 'critical').length;
+  const escalated = stats?.escalated || 0;
 
   return (
     <>
       <Sidebar />
       <div className="main-content">
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 20, flexWrap: 'wrap', marginBottom: 28 }}>
-          <div>
-            <div className="eyebrow" style={{ marginBottom: 8 }}>Ecosystem Change Intelligence</div>
-            <h1 style={{ fontSize: 30, fontWeight: 800 }}>Command Overview</h1>
-            <p style={{ fontSize: 14, color: 'var(--text-muted)', marginTop: 6 }}>
-              Continuous watch over Android security, API &amp; policy surfaces — detect, triage, act.
-            </p>
+        {/* ── Hero: the change that mattered most, as a diff ── */}
+        {lead && (
+          <section className="hero">
+            <div className="hero-eyebrow">
+              <span className="live-dot" />
+              <span>Watching {stats?.sources || 0} feeds</span>
+              <span style={{ color: 'var(--border-hover)' }}>/</span>
+              <span>{stats?.totalChanges || 0} changes detected</span>
+              <span style={{ color: 'var(--border-hover)' }}>/</span>
+              <span style={{ color: escalated ? 'var(--del)' : 'inherit' }}>
+                {escalated} escalated
+              </span>
+            </div>
+
+            {leadChange ? (
+              <DiffBlock change={leadChange} maxLines={5} />
+            ) : (
+              <div className="diff">
+                <div className="diff-gutter" aria-hidden="true">
+                  <span className="g-id">—</span>
+                </div>
+                <div className="diff-body">
+                  <span className="diff-line" style={{ color: 'var(--text-muted)' }}>
+                    Source diff for this ticket is not in the current window.
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <h1 className="hero-title">{lead.title}</h1>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                gap: 26,
+                flexWrap: 'wrap',
+                marginTop: 16,
+              }}
+            >
+              <div>
+                <div
+                  className="strip-label"
+                  style={{ marginBottom: 6 }}
+                >
+                  Risk
+                </div>
+                <div className="hero-risk">
+                  {lead.riskScore?.toFixed(1)}
+                  <span className="hero-risk-unit"> / 10</span>
+                </div>
+              </div>
+
+              <div className="hero-meta" style={{ paddingBottom: 6 }}>
+                <span>{lead.sourceName}</span>
+                <span style={{ color: 'var(--border-hover)' }}>/</span>
+                <span>detected {relativeTime(leadChange?.created_at || lead.createdAt)}</span>
+                <span style={{ color: 'var(--border-hover)' }}>/</span>
+                <span>{lead.recommendedActions?.length || 0} actions queued</span>
+                <span style={{ color: 'var(--border-hover)' }}>/</span>
+                <span>{lead.ownerSuggestion}</span>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── Counts, compressed ── */}
+        <div className="strip">
+          <div className="strip-cell">
+            <span className="strip-label">Sources</span>
+            <div className="strip-value">{stats?.sources || 0}</div>
+            <div className="strip-sub">feeds under watch</div>
           </div>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <span className="status-pill"><span className="live-dot" /> MONITORING</span>
-            <span className="status-pill">◷ LAST RUN 08:42 UTC</span>
-            <span className="status-pill" style={{ color: criticalCount ? '#ff8f8f' : 'var(--text-secondary)' }}>
-              ⚠ {criticalCount} CRITICAL
-            </span>
+          <div className="strip-cell">
+            <span className="strip-label">Changes</span>
+            <div className="strip-value">{stats?.totalChanges || 0}</div>
+            <div className="strip-sub">{stats?.pending || 0} awaiting triage</div>
+          </div>
+          <div className="strip-cell">
+            <span className="strip-label">Tickets</span>
+            <div className="strip-value">{stats?.actionTickets || 0}</div>
+            <div className="strip-sub" style={{ color: criticalCount ? 'var(--del)' : undefined }}>
+              {criticalCount} critical
+            </div>
+          </div>
+          <div className="strip-cell">
+            <span className="strip-label">Agent events</span>
+            <div className="strip-value">{stats?.agentEvents || 0}</div>
+            <div className="strip-sub">sentinel · coordinator</div>
           </div>
         </div>
 
-        {/* Live pipeline */}
         <LivePipeline />
 
-        {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 20 }}>
-          <StatCard label="Monitored Sources" value={stats?.sources || 0} sub="14 active feeds" variant="blue" />
-          <StatCard label="Changes Detected" value={stats?.totalChanges || 0} sub={`${stats?.pending || 0} pending triage`} variant="green" accent="var(--accent-amber)" />
-          <StatCard label="Action Tickets" value={stats?.actionTickets || 0} sub={`${criticalCount} critical · ${highCount} high`} variant="amber" accent="#ff8f8f" />
-          <StatCard label="Agent Events" value={stats?.agentEvents || 0} sub="scout · sentinel · coordinator" variant="purple" />
+        {/* ── Ranked tickets ── */}
+        <div className="sec">
+          <h2>Action tickets</h2>
+          <div className="sec-rule" />
+          <span className="sec-count">ranked by risk</span>
         </div>
 
-        {/* Threat posture bar */}
-        <div className="glass-card" style={{ padding: '20px 24px', marginBottom: 28 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-            <div className="eyebrow">Pipeline Posture</div>
-            <div className="mono" style={{ fontSize: 12, color: 'var(--text-muted)' }}>{postureTotal} events tracked</div>
-          </div>
-          <div style={{ display: 'flex', height: 10, borderRadius: 6, overflow: 'hidden', marginBottom: 14, background: 'var(--border)' }}>
-            {posture.map(p => (
-              <div key={p.label} style={{ width: `${(p.count / postureTotal) * 100}%`, background: p.color }} title={`${p.label}: ${p.count}`} />
-            ))}
-          </div>
-          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-            {posture.map(p => (
-              <div key={p.label} style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                <div style={{ width: 9, height: 9, borderRadius: 3, background: p.color }} />
-                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{p.label}</span>
-                <span className="metric" style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{p.count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        {tickets.slice(0, 6).map((t) => (
+          <TicketRow key={t.id} ticket={t} change={byId.get(t.changeId)} />
+        ))}
 
-        {/* Tickets */}
-        <div className="glass-card" style={{ padding: 0, overflow: 'hidden' }}>
-          <div style={{ padding: '18px 24px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <h2 style={{ fontSize: 16, fontWeight: 700 }}>Priority Action Tickets</h2>
-              <span className="eyebrow" style={{ fontSize: 10 }}>{criticalCount} critical · {highCount} high · ranked by risk</span>
-            </div>
-            <a href="/tickets" className="btn-ghost" style={{ padding: '7px 14px', fontSize: 12 }}>View all →</a>
-          </div>
-          <div style={{ overflowX: 'auto' }}>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th style={{ width: 70 }}>Risk</th>
-                  <th style={{ width: 96 }}>Priority</th>
-                  <th>Recommendation</th>
-                  <th style={{ width: 150 }}>Source</th>
-                  <th style={{ width: 96 }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tickets.slice(0, 8).map(t => (
-                  <TicketRow key={t.id} ticket={t} onOpen={() => { window.location.href = '/tickets'; }} />
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <a
+          href="/tickets"
+          className="mono"
+          style={{
+            display: 'inline-block',
+            marginTop: 10,
+            fontSize: 11,
+            color: 'var(--signal)',
+            textDecoration: 'none',
+          }}
+        >
+          All {tickets.length} tickets →
+        </a>
       </div>
     </>
   );

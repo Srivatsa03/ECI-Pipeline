@@ -2,42 +2,68 @@
 
 /* ============================================================
    SENTINEL — Ecosystem Change Intelligence console
-   Design language: warm-charcoal command deck, amber "signal"
-   accent + teal telemetry, monospaced data, hairline reticles.
+
+   Design thesis: the interface IS a diff.
+
+   This system only exists because something changed between two
+   snapshots, so the page is structured the way a diff is — a
+   monospace gutter carrying +/− counts is the spine of every
+   surface, and the hero is the actual change that mattered most
+   rather than a row of big numbers.
+
+   Colour is semantic, never decorative. Four meanings only:
+     add     something appeared in the world
+     del     something was removed, or risk is critical
+     signal  a machine inferred this (triage, retrieval, agents)
+     warn    mid risk
+   Everything else is ink and hairlines.
    ============================================================ */
 
 @layer base {
   :root {
-    --bg-primary: #0b0c0f;
-    --bg-secondary: #101216;
-    --bg-elev: #14161c;
-    --bg-card: rgba(255, 255, 255, 0.025);
-    --bg-card-hover: rgba(255, 255, 255, 0.05);
-    --bg-paper: #14161c;
-    --bg-default: #0b0c0f;
-    --border: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(255, 255, 255, 0.18);
-    --grid-line: rgba(255, 255, 255, 0.022);
+    /* Ground: deep ink with a green cast, so it reads as instrument
+       glass rather than the default near-black dashboard. */
+    --bg-primary: #0a0f11;
+    --bg-secondary: #10171a;
+    --bg-elev: #161f22;
+    --bg-card: rgba(180, 230, 220, 0.03);
+    --bg-card-hover: rgba(180, 230, 220, 0.06);
+    --bg-paper: #161f22;
+    --bg-default: #0a0f11;
+    --border: rgba(180, 230, 220, 0.1);
+    --border-hover: rgba(180, 230, 220, 0.22);
+    --grid-line: rgba(180, 230, 220, 0.02);
 
-    --text-primary: #f4f5f7;
-    --text-secondary: #a4a7b4;
-    --text-muted: #6b6f7e;
+    --text-primary: #e6efec;
+    --text-secondary: #8fa3a0;
+    --text-muted: #5a6b69;
 
-    --accent-amber: #f5b544;
-    --accent-teal: #34d399;
-    --accent-emerald: #34d399;
-    --accent-cyan: #22d3ee;
-    --accent-blue: #5e9bff;
-    --accent-purple: #a78bfa;
-    --accent-red: #ff5c5c;
-    --accent-pink: #f472b6;
-    --signal: #f5b544;
+    /* Semantic four. The legacy names are kept so every existing
+       component keeps resolving, but they now collapse onto the
+       four meanings instead of an eight-colour rainbow. */
+    --add: #5fd9a6;
+    --del: #ff7a6b;
+    --signal: #b6a6ff;
+    --warn: #f0b458;
 
-    --gradient-1: linear-gradient(135deg, #f5b544, #ff8a4c);
-    --gradient-2: linear-gradient(135deg, #34d399, #22d3ee);
-    --gradient-3: linear-gradient(135deg, #ff5c5c, #f5b544);
+    --accent-teal: var(--add);
+    --accent-emerald: var(--add);
+    --accent-cyan: var(--add);
+    --accent-red: var(--del);
+    --accent-pink: var(--del);
+    --accent-blue: var(--signal);
+    --accent-purple: var(--signal);
+    --accent-amber: var(--warn);
 
-    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --gradient-1: linear-gradient(135deg, #b6a6ff, #5fd9a6);
+    --gradient-2: linear-gradient(135deg, #5fd9a6, #b6a6ff);
+    --gradient-3: linear-gradient(135deg, #ff7a6b, #f0b458);
+
+    /* --font-display and --font-mono are injected on <html> by next/font
+       (see app/layout.js). These are the fallback stacks used at the point
+       of use so nothing renders unstyled if a font request fails. */
+    --stack-display: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --stack-mono: ui-monospace, "SF Mono", Menlo, monospace;
     --radius: 12px;
   }
 
@@ -60,25 +86,57 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: var(--font-display), var(--stack-display);
     background-color: var(--bg-primary);
+    /* One light source, top-left, the colour of inference. The old build had
+       two competing glows; a single source reads as a lit instrument. */
     background-image:
-      radial-gradient(900px 500px at 78% -8%, rgba(245, 181, 68, 0.07), transparent 60%),
-      radial-gradient(760px 480px at 8% 108%, rgba(52, 211, 153, 0.06), transparent 55%),
+      radial-gradient(1100px 620px at 12% -10%, rgba(182, 166, 255, 0.07), transparent 62%),
       linear-gradient(var(--grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+    background-size: 100% 100%, 30px 30px, 30px 30px;
+    background-attachment: fixed;
     color: var(--text-primary);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Martian Mono is wide by design; pull it back so dense diff lines fit. */
+  .mono,
+  code,
+  pre {
+    font-family: var(--font-mono), var(--stack-mono);
+    letter-spacing: -0.03em;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display), var(--stack-display);
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
-
-  h1, h2, h3 { letter-spacing: -0.02em; }
 }
 
 @layer components {
@@ -371,4 +429,263 @@
 @keyframes scan {
   0% { transform: translateY(-100%); }
   100% { transform: translateY(1200%); }
+}
+
+/* ============================================================
+   THE DIFF SYSTEM — the signature of this console.
+
+   Every surface that represents a change wears a gutter: a
+   monospace rail carrying the real added/deleted line counts
+   from diff_json. It is structure, not ornament — the numbers
+   in it are the actual delta, so the rail tells you the size
+   of a change before you read a word of it.
+   ============================================================ */
+
+.diff {
+  display: grid;
+  grid-template-columns: minmax(56px, auto) 1fr;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--bg-elev), var(--bg-secondary));
+  overflow: hidden;
+}
+
+.diff-gutter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 18px 14px;
+  background: rgba(0, 0, 0, 0.28);
+  border-right: 1px solid var(--border);
+  font-family: var(--font-mono), var(--stack-mono);
+  font-size: 11px;
+  letter-spacing: -0.04em;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.diff-gutter .g-add { color: var(--add); }
+.diff-gutter .g-del { color: var(--del); }
+.diff-gutter .g-id {
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-size: 10px;
+}
+
+.diff-body {
+  padding: 16px 20px;
+  font-family: var(--font-mono), var(--stack-mono);
+  font-size: 12.5px;
+  letter-spacing: -0.035em;
+  line-height: 1.85;
+  overflow-x: auto;
+}
+
+.diff-line {
+  display: block;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding-left: 2px;
+  border-left: 2px solid transparent;
+}
+
+.diff-line--add {
+  color: var(--add);
+  border-left-color: color-mix(in srgb, var(--add) 55%, transparent);
+  background: color-mix(in srgb, var(--add) 6%, transparent);
+  padding-left: 8px;
+}
+
+.diff-line--del {
+  color: var(--del);
+  border-left-color: color-mix(in srgb, var(--del) 55%, transparent);
+  background: color-mix(in srgb, var(--del) 6%, transparent);
+  padding-left: 8px;
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--del) 45%, transparent);
+}
+
+/* ── Hero: the change that mattered most, at full scale ── */
+
+.hero {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background:
+    radial-gradient(680px 300px at 88% -30%, color-mix(in srgb, var(--signal) 12%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--bg-elev), var(--bg-secondary));
+  padding: 26px 28px 24px;
+  margin-bottom: 22px;
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono), var(--stack-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+.hero-title {
+  font-size: clamp(22px, 3vw, 33px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  margin: 20px 0 10px;
+  max-width: 30ch;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono), var(--stack-mono);
+  font-size: 11px;
+  letter-spacing: -0.02em;
+  color: var(--text-muted);
+}
+
+/* The risk figure is set in the mono face so it reads as an
+   instrument reading rather than a marketing statistic. */
+.hero-risk {
+  font-family: var(--font-mono), var(--stack-mono);
+  font-size: clamp(38px, 6vw, 62px);
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  color: var(--del);
+}
+
+.hero-risk-unit {
+  font-size: 0.32em;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ── Delta strip: counts, compressed. Replaces the 4 big tiles ── */
+
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+.strip-cell {
+  flex: 1 1 150px;
+  padding: 15px 18px;
+  border-right: 1px solid var(--border);
+  min-width: 0;
+}
+
+.strip-cell:last-child { border-right: none; }
+
+.strip-label {
+  font-family: var(--font-mono), var(--stack-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.strip-value {
+  font-family: var(--font-mono), var(--stack-mono);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.strip-sub {
+  font-family: var(--font-mono), var(--stack-mono);
+  font-size: 10.5px;
+  letter-spacing: -0.02em;
+  color: var(--text-muted);
+  margin-top: 7px;
+}
+
+/* ── Row spine: the gutter, shrunk, for list rows ── */
+
+.spine {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1px;
+  padding: 0 12px 0 0;
+  margin-right: 14px;
+  border-right: 1px solid var(--border);
+  font-family: var(--font-mono), var(--stack-mono);
+  font-size: 10px;
+  letter-spacing: -0.04em;
+  min-width: 52px;
+}
+
+.spine .s-add { color: var(--add); }
+.spine .s-del { color: var(--del); }
+
+/* ── Section heading ── */
+
+.sec {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 30px 0 14px;
+}
+
+.sec h2 {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.sec-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.sec-count {
+  font-family: var(--font-mono), var(--stack-mono);
+  font-size: 10.5px;
+  letter-spacing: -0.02em;
+  color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+  .diff { grid-template-columns: 1fr; }
+  .diff-gutter {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 14px;
+  }
+  .diff-gutter .g-id { margin-bottom: 0; }
+  .strip-cell { flex-basis: 50%; }
+}
+
+/* Accessible label for the gutter, which is presentational to sighted users. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
